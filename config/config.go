@@ -73,7 +73,7 @@ func GetDefaultConfig() *ApplicationConfig {
 		Hostname:      hostname,
 		StartupBanner: "Ready",
 		Http: HttpConfig{
-			BindAddr: ":8080",
+			BindAddr: ":8181",
 			MaxConns: 1000000,
 		},
 	}
