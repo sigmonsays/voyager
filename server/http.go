@@ -114,30 +114,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			WriteError(w, r, "readdir: %s", err)
 			return
 		}
+		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
+	} else {
+		hndlr.Layout, err = filetype.Determine(localpath)
 	}
 	hndlr.Filenames = filenames
 
-	found := make(map[filetype.FileType]int)
-	for _, filename := range filenames {
-		ftype, err := filetype.Determine(filepath.Join(localpath, filename))
-		if err != nil {
-			log.Warnf("determine filetype %s: %s", filename, err)
-		}
-		if _, ok := found[ftype]; ok == false {
-			found[ftype] = 0
-		}
-		found[ftype]++
-	}
-	var layout filetype.FileType
-	var numfiles int
-	for ftype, cnt := range found {
-		if ftype != filetype.UnknownFile && cnt > numfiles {
-			layout = ftype
-			cnt = numfiles
-		}
-	}
-
-	log.Infof("layout type %s", layout)
+	log.Infof("layout type %s", hndlr.Layout)
 
 	handler.NewListHandler(hndlr).ServeHTTP(w, r)
 

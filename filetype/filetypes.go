@@ -18,6 +18,7 @@ var Picture = map[string]bool{
 var Video = map[string]bool{
 	"avi": true,
 	"mp4": true,
+	"m4v": true,
 }
 
 var Audio = map[string]bool{
