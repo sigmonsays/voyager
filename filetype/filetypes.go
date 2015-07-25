@@ -1,8 +1,11 @@
 package filetype
 
+//go:generate stringer -type=FileType
+
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 )
 
 var Picture = map[string]bool{
@@ -54,6 +57,8 @@ func Determine(path string) (FileType, error) {
 	if ext == "" {
 		return UnknownFile, fmt.Errorf("no extension")
 	}
+
+	ext = strings.ToLower(ext[1:])
 
 	filetype, ok := FileTypes[ext]
 

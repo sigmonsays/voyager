@@ -10,6 +10,7 @@ import (
 
 	"github.com/sigmonsays/go-apachelog"
 	"github.com/sigmonsays/voyager/config"
+	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
 	"github.com/sigmonsays/voyager/voy"
 )
@@ -69,7 +70,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	err = voy.LoadYaml(voyfile)
 	if err != nil {
-		log.Warnf("load voyfile %s: %s", voyfile, err)
+		WriteError(w, r, "load voyfile %s: %s", voyfile, err)
 		return
 	}
 
@@ -77,7 +78,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if voy.Allowed(relpath) == false {
 		w.WriteHeader(403)
-		fmt.Fprintf(w, "path not allowed")
+		WriteError(w, r, "path not allowed")
 		return
 	}
 
@@ -85,6 +86,48 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// dispatch handler to appropriate handler based on content
 
-	handler.NewListHandler(username, homedir, relpath).ServeHTTP(w, r)
+	localpath := filepath.Join(homedir, relpath)
 
+	f, err := os.Open(localpath)
+	if err != nil {
+		WriteError(w, r, "open: %s", err)
+		return
+	}
+	defer f.Close()
+
+	filenames, err := f.Readdirnames(-1)
+	if err != nil {
+		WriteError(w, r, "readdir: %s", err)
+		return
+	}
+
+	found := make(map[filetype.FileType]int)
+	for _, filename := range filenames {
+		ftype, err := filetype.Determine(filepath.Join(localpath, filename))
+		if err != nil {
+			log.Warnf("determine filetype %s: %s", filename, err)
+		}
+		if _, ok := found[ftype]; ok == false {
+			found[ftype] = 0
+		}
+		found[ftype]++
+	}
+	var layout filetype.FileType
+	var numfiles int
+	for ftype, cnt := range found {
+		if cnt > numfiles {
+			layout = ftype
+			cnt = numfiles
+		}
+	}
+
+	log.Infof("layout type %s", layout)
+
+	handler.NewListHandler(username, homedir, relpath, filenames).ServeHTTP(w, r)
+
+}
+
+func WriteError(w http.ResponseWriter, r *http.Request, s string, args ...interface{}) {
+	log.Warnf(s, args...)
+	fmt.Fprintf(w, s, args...)
 }
