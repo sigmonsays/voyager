@@ -10,6 +10,7 @@ import (
 
 	"github.com/sigmonsays/go-apachelog"
 	"github.com/sigmonsays/voyager/config"
+	"github.com/sigmonsays/voyager/handler"
 	"github.com/sigmonsays/voyager/voy"
 )
 
@@ -61,7 +62,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	strip_prefix := fmt.Sprintf("/~%s/", username)
 	homedir := user_ent.HomeDir
 
 	voy := voy.DefaultConfig()
@@ -83,6 +83,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	log.Infof("user=%s path=%s", username, relpath)
 
-	handler := http.StripPrefix(strip_prefix, http.FileServer(http.Dir(homedir)))
-	handler.ServeHTTP(w, r)
+	// dispatch handler to appropriate handler based on content
+
+	handler.NewListHandler(username, homedir, relpath).ServeHTTP(w, r)
+
 }
