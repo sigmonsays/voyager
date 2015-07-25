@@ -88,17 +88,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	localpath := filepath.Join(homedir, relpath)
 
-	f, err := os.Open(localpath)
+	st, err := os.Stat(localpath)
 	if err != nil {
-		WriteError(w, r, "open: %s", err)
+		w.WriteHeader(404)
+		WriteError(w, r, "%s", err)
 		return
 	}
-	defer f.Close()
 
-	filenames, err := f.Readdirnames(-1)
-	if err != nil {
-		WriteError(w, r, "readdir: %s", err)
-		return
+	var filenames []string
+	if st.IsDir() {
+		f, err := os.Open(localpath)
+		if err != nil {
+			WriteError(w, r, "open: %s", err)
+			return
+		}
+		defer f.Close()
+
+		filenames, err = f.Readdirnames(-1)
+		if err != nil {
+			WriteError(w, r, "readdir: %s", err)
+			return
+		}
 	}
 
 	found := make(map[filetype.FileType]int)
