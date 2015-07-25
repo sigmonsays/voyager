@@ -22,6 +22,8 @@ var Video = map[string]bool{
 
 var Audio = map[string]bool{
 	"mp3": true,
+	"wav": true,
+	"m3u": true,
 }
 
 type FileType int

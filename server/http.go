@@ -85,6 +85,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Infof("user=%s path=%s", username, relpath)
 
 	// dispatch handler to appropriate handler based on content
+	hndlr := &handler.Handler{
+		Username: username,
+		Homedir:  homedir,
+		Path:     path,
+	}
 
 	localpath := filepath.Join(homedir, relpath)
 
@@ -110,6 +115,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	hndlr.Filenames = filenames
 
 	found := make(map[filetype.FileType]int)
 	for _, filename := range filenames {
@@ -125,7 +131,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var layout filetype.FileType
 	var numfiles int
 	for ftype, cnt := range found {
-		if cnt > numfiles {
+		if ftype != filetype.UnknownFile && cnt > numfiles {
 			layout = ftype
 			cnt = numfiles
 		}
@@ -133,7 +139,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	log.Infof("layout type %s", layout)
 
-	handler.NewListHandler(username, homedir, relpath, filenames).ServeHTTP(w, r)
+	handler.NewListHandler(hndlr).ServeHTTP(w, r)
 
 }
 
