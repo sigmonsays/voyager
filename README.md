@@ -9,7 +9,7 @@ on the types of files found.
 
     
     export GOPATH=$HOME/go
-    go get github.com/sigmonsays/voyager/cmd/voyager
+    go get -u github.com/sigmonsays/voyager/cmd/voyager
 
 create ~/.voyager file with the paths you wish to allow. They are relative to your $HOME directory. To allow 
 ~/Pictures to be browsable via HTTP, create ~/.voyager with this content:
