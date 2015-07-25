@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/server"
 )
@@ -16,7 +14,4 @@ func main() {
 		return
 	}
 
-	for {
-		time.Sleep(time.Second)
-	}
 }
