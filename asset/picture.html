@@ -4,25 +4,32 @@
    <link href="/s/style.css" media="all" rel="stylesheet" />
 </head>
 <body>
+<div class=page>
 
 {{range $i, $b := .Breadcrum}}
 <a href="{{$b.Url}}">{{$b.Name}}</a> 
 {{end}}
-<br>
 
 <h2>{{.Title}} - {{$.LocalPath}}</h2>
 
-{{range $i, $f := .Directories}}
-<a href="{{$f.Url}}">{{$f.Basename}}</a> &nbsp;
+{{if ..Directories}}
+<div class=directories>
+   {{range $i, $f := .Directories}}
+   <a href="{{$f.Url}}">{{$f.Basename}}</a> &nbsp;
+   {{end}}
+   <p>
+</div>
 {{end}}
-<p>
 
-{{range $i, $f := .Files}}
-
-<div class=thumbnail>
-   <a href="{{$f.Url}}"><img src="/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+<div class=container>
+   {{range $i, $f := .Files}}
+   <div class=thumbnail>
+      <a href="{{$f.Url}}"><img src="/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+   </div>
+   {{end}}
 </div>
 
-{{end}}
 
+</div>
 </body>
+</html>
