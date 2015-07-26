@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/sigmonsays/voyager/asset"
+	"github.com/sigmonsays/voyager/filetype"
 )
 
 // provides listing pictures and auto thumbnailing
@@ -19,15 +20,20 @@ func NewPictureHandler(handler *Handler) *PictureHandler {
 }
 
 type Gallery struct {
-	Path      string
-	LocalPath string
-	Title     string
-	Files     []*File
+	Path        string
+	LocalPath   string
+	Title       string
+	Files       []*File
+	Directories []*File
 }
 
 type File struct {
 	Url  string
 	Name string
+}
+
+func (f *File) Basename() string {
+	return filepath.Base(f.Name)
 }
 
 func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +49,15 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Path:      h.Path,
 		LocalPath: h.LocalPath(),
 	}
-	for _, filename := range h.Filenames {
+	for _, dirname := range h.Directories {
+		f := &File{
+			Url:  filepath.Join(h.Path, dirname),
+			Name: dirname,
+		}
+		data.Directories = append(data.Directories, f)
+	}
+
+	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
 		f := &File{
 			Url:  filepath.Join(h.Path, filename),
 			Name: filename,

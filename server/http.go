@@ -109,7 +109,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var filenames []string
+	filenames := make([]string, 0)
+	directories := make([]string, 0)
 	if st.IsDir() {
 		f, err := os.Open(localpath)
 		if err != nil {
@@ -118,18 +119,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		defer f.Close()
 
-		filenames, err = f.Readdirnames(-1)
+		files, err := f.Readdir(-1)
 		if err != nil {
 			WriteError(w, r, "readdir: %s", err)
 			return
+		}
+		for _, file := range files {
+			if file.IsDir() {
+				directories = append(directories, file.Name())
+			} else {
+				filenames = append(filenames, file.Name())
+			}
 		}
 		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	} else {
 		hndlr.Layout, err = filetype.Determine(localpath)
 	}
 	hndlr.Filenames = filenames
+	hndlr.Directories = directories
 
-	log.Infof("layout type %s", hndlr.Layout)
+	log.Infof("path %s %d files, %d dirs, layout %s", localpath, len(filenames), len(directories), hndlr.Layout)
 
 	if hndlr.Layout == filetype.PictureFile {
 		handler.NewPictureHandler(hndlr).ServeHTTP(w, r)

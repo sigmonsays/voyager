@@ -1,8 +1,10 @@
 body {
-   padding: 0px;
-   margin: 0px;
 }
 
-div.thumbnail {
+.thumbnail {
+   border: 1px solid black;
+   margin: 5px;
+   padding: 2px;
    float: left;
+   display: inline-block;
 }

@@ -9,11 +9,12 @@ import (
 )
 
 type Handler struct {
-	Layout    filetype.FileType
-	Username  string
-	Homedir   string
-	Path      string
-	Filenames []string
+	Layout      filetype.FileType
+	Username    string
+	Homedir     string
+	Path        string
+	Directories []string
+	Filenames   []string
 }
 
 func (h *Handler) LocalPath() string {

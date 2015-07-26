@@ -7,11 +7,18 @@
 
 <h1>{{.Title}}</h1>
 
-<h3>{{$.LocalPath}}</h3>
 
+{{range $i, $f := .Directories}}
+<a href="{{$f.Basename}}">{{$f.Basename}}</a> &nbsp;
+{{end}}
+<p>
+
+<h3>{{$.LocalPath}}</h3>
 {{range $i, $f := .Files}}
 
-<div class=thumbnail><a href="{{$f.Url}}"><img src="/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a></div>
+<div class=thumbnail>
+   <a href="{{$f.Url}}"><img src="/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+</div>
 
 {{end}}
 
