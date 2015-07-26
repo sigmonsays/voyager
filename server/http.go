@@ -129,7 +129,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	log.Infof("layout type %s", hndlr.Layout)
 
-	handler.NewListHandler(hndlr).ServeHTTP(w, r)
+	if hndlr.Layout == filetype.PictureFile {
+		handler.NewPictureHandler(hndlr).ServeHTTP(w, r)
+	} else {
+		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+	}
 
 }
 
