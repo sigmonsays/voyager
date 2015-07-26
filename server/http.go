@@ -83,11 +83,14 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	relpath := filepath.Join(tmp[2:]...)
+	relpath, err := filepath.Rel("/~"+username+"/", path)
+	if err != nil {
+		log.Warnf("relpath %s", err)
+	}
 
 	if voy.Allowed(relpath) == false {
 		w.WriteHeader(403)
-		WriteError(w, r, "path not allowed")
+		WriteError(w, r, "bye bye")
 		return
 	}
 
@@ -95,9 +98,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// dispatch handler to appropriate handler based on content
 	hndlr := &handler.Handler{
-		Username: username,
-		Homedir:  homedir,
-		Path:     path,
+		Username:  username,
+		Homedir:   homedir,
+		Path:      relpath,
+		UrlPrefix: "/~" + username,
 	}
 
 	localpath := filepath.Join(homedir, relpath)

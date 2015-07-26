@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"path/filepath"
+	"strings"
 
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/filetype"
@@ -25,6 +26,11 @@ type Gallery struct {
 	Title       string
 	Files       []*File
 	Directories []*File
+	Breadcrum   []*Breadcrum
+}
+type Breadcrum struct {
+	Url  string
+	Name string
 }
 
 type File struct {
@@ -48,10 +54,21 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Files:     make([]*File, 0),
 		Path:      h.Path,
 		LocalPath: h.LocalPath(),
+		Breadcrum: make([]*Breadcrum, 0),
 	}
+
+	tmp := strings.Split(h.Path, "/")
+	for i := 0; i < len(tmp); i++ {
+		b := &Breadcrum{
+			Url:  h.Url(strings.Join(tmp[0:i+1], "/")),
+			Name: tmp[i],
+		}
+		data.Breadcrum = append(data.Breadcrum, b)
+	}
+
 	for _, dirname := range h.Directories {
 		f := &File{
-			Url:  filepath.Join(h.Path, dirname),
+			Url:  h.Url(h.Path, dirname),
 			Name: dirname,
 		}
 		data.Directories = append(data.Directories, f)
@@ -59,7 +76,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
 		f := &File{
-			Url:  filepath.Join(h.Path, filename),
+			Url:  h.Url(h.Path, filename),
 			Name: filename,
 		}
 		data.Files = append(data.Files, f)

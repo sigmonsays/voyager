@@ -5,15 +5,18 @@
 </head>
 <body>
 
-<h1>{{.Title}}</h1>
+{{range $i, $b := .Breadcrum}}
+<a href="{{$b.Url}}">{{$b.Name}}</a> 
+{{end}}
+<br>
 
+<h2>{{.Title}} - {{$.LocalPath}}</h2>
 
 {{range $i, $f := .Directories}}
-<a href="{{$f.Basename}}">{{$f.Basename}}</a> &nbsp;
+<a href="{{$f.Url}}">{{$f.Basename}}</a> &nbsp;
 {{end}}
 <p>
 
-<h3>{{$.LocalPath}}</h3>
 {{range $i, $f := .Files}}
 
 <div class=thumbnail>

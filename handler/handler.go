@@ -9,17 +9,26 @@ import (
 )
 
 type Handler struct {
-	Layout      filetype.FileType
-	Username    string
-	Homedir     string
+	Layout   filetype.FileType
+	Username string
+
+	// ~/username portion
+	UrlPrefix string
+
+	// home directory
+	Homedir string
+
+	// path relative to ~/username/
 	Path        string
 	Directories []string
 	Filenames   []string
 }
 
 func (h *Handler) LocalPath() string {
-	offset := len(h.Username) + 2
-	return filepath.Join(h.Homedir, h.Path[offset:])
+	return filepath.Join(h.Homedir, h.Path)
+}
+func (h *Handler) Url(paths ...string) string {
+	return filepath.Join(h.UrlPrefix, filepath.Join(paths...))
 }
 
 func WriteError(w http.ResponseWriter, r *http.Request, s string, args ...interface{}) {
