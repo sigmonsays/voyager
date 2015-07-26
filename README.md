@@ -5,6 +5,10 @@ the main purpose of voyager is to provide a context aware file browser in a web 
 voyager is a http server which can render file listings using the appropriate layout based
 on the types of files found.
 
+# features
+
+- image resize 
+
 # install
 
     
@@ -17,3 +21,6 @@ create ~/.voyager file with the paths you wish to allow. They are relative to yo
     allow:
     - Pictures
 
+# configuration
+
+default configuration file is ~/.voyager 
