@@ -15,6 +15,7 @@ type ApplicationConfig struct {
 
 	AutoUpgrade bool
 	AutoRestart bool
+	CacheDir    string
 
 	Http HttpConfig
 }
@@ -77,6 +78,7 @@ func GetDefaultConfig() *ApplicationConfig {
 		StartupBanner: "Ready",
 		AutoUpgrade:   true,
 		AutoRestart:   true,
+		CacheDir:      "/tmp/voyager",
 		Http: HttpConfig{
 			BindAddr: ":8181",
 			MaxConns: 1000000,

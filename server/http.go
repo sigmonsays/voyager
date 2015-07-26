@@ -44,6 +44,7 @@ func NewServer(addr string) *Server {
 	mux.HandleFunc("/favicon.ico", asset.Handler)
 	mux.HandleFunc("/s/", asset.Handler)
 	mux.HandleFunc("/image/", s.ImageHandler)
+	mux.HandleFunc("/c/", s.CacheHandler)
 	return s
 }
 

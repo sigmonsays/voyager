@@ -38,6 +38,14 @@ func main() {
 		devrestarter.Init()
 	}
 
+	if util.FileExists(cfg.CacheDir) == false {
+		err = os.MkdirAll(cfg.CacheDir, 0755)
+		if err != nil {
+			log.Errorf("cache dir error %s: %s", cfg.CacheDir, err)
+			return
+		}
+	}
+
 	if cfg.AutoUpgrade {
 		gw := reload_git.NewGitWatch(".", "master")
 		gw.Interval = 30
@@ -62,6 +70,7 @@ func main() {
 	}
 
 	srv := server.NewServer(cfg.Http.BindAddr)
+	srv.Conf = cfg
 
 	log.Infof("%s", cfg.StartupBanner)
 	err = srv.Start()
