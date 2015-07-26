@@ -11,6 +11,7 @@ import (
 	"github.com/sigmonsays/go-apachelog"
 
 	"github.com/sigmonsays/voyager/asset"
+	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
@@ -19,8 +20,9 @@ import (
 
 type Server struct {
 	Addr string
-
 	Conf *config.ApplicationConfig
+
+	Cache *cache.FileCache
 
 	srv *http.Server
 }

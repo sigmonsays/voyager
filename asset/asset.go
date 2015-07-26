@@ -1,12 +1,12 @@
+//go:generate becky -wrap Blob style.css favicon.ico picture.html
 package asset
 
 import (
 	"fmt"
 	"net/http"
 	"strings"
+	"text/template"
 )
-
-//go:generate becky -wrap Blob style.css favicon.ico
 
 type blob struct {
 	asset
@@ -16,20 +16,29 @@ func Blob(a asset) blob {
 	return blob{a}
 }
 
-var assets = map[string]blob{
-	"favicon.ico": favicon,
-	"style.css":   style,
+var Assets = map[string]blob{
+	"favicon.ico":  favicon,
+	"style.css":    style,
+	"picture.html": picture,
+}
+
+func GetTemplate(path string) (*template.Template, error) {
+	a, err := Get(path)
+	if err != nil {
+		return nil, err
+	}
+	return template.Must(template.New(a.Name).Parse(a.Content)), nil
 }
 
 func Get(path string) (blob, error) {
-	a, ok := assets[path]
+	a, ok := Assets[path]
 	if ok == false {
 		return a, fmt.Errorf("no such asset: %s", path)
 	}
-
 	return a, nil
 
 }
+
 func notFound(w http.ResponseWriter, r *http.Request) {
 	http.NotFoundHandler().ServeHTTP(w, r)
 }

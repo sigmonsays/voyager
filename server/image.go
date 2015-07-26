@@ -48,6 +48,18 @@ func (s *Server) ImageHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// cache hit
+	if f, err := s.Cache.Get(localpath); err == nil {
+		w.Header().Add("Content-Type", "image/jpeg")
+		_, err = io.Copy(w, f)
+		if err != nil {
+			log.Warnf("copy cache content: %s", err)
+		}
+		defer f.Close()
+		return
+	}
+
+	// update cache
 	ext := filepath.Ext(localpath)
 	if ext != "" {
 		ext = strings.ToLower(ext[1:])
@@ -82,6 +94,23 @@ func (s *Server) ImageHandler(w http.ResponseWriter, r *http.Request) {
 		Quality: 50,
 	}
 	w.Header().Add("Content-Type", "image/jpeg")
+
+	// update cache
+	fc, err := s.Cache.Set(localpath)
+	if err != nil {
+		w.WriteHeader(400)
+		WriteError(w, r, "Unable to cache file ext=%s path=%s: %s", ext, localpath, err)
+		return
+	}
+	defer fc.Close()
+	err = jpeg.Encode(fc, m, opts)
+	if err != nil {
+		w.WriteHeader(400)
+		WriteError(w, r, "Unable to encode cache file ext=%s path=%s: %s", ext, localpath, err)
+		return
+	}
+
+	// send the image
 	err = jpeg.Encode(w, m, opts)
 	if err != nil {
 		w.WriteHeader(400)

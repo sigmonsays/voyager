@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/server"
 	"github.com/sigmonsays/voyager/util"
@@ -69,8 +70,15 @@ func main() {
 		}
 	}
 
+	cache := cache.NewFileCache(cfg.CacheDir)
+	if err != nil {
+		log.Errorf("cache error: %s %s", cfg.CacheDir, err)
+		return
+	}
+
 	srv := server.NewServer(cfg.Http.BindAddr)
 	srv.Conf = cfg
+	srv.Cache = cache
 
 	log.Infof("%s", cfg.StartupBanner)
 	err = srv.Start()

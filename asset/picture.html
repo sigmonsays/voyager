@@ -1,0 +1,18 @@
+<html>
+<head>
+   <title>Pictures in {{$.Path}}</title>
+   <link href="/s/style.css" media="all" rel="stylesheet" />
+</head>
+<body>
+
+<h1>{{.Title}}</h1>
+
+<h3>{{$.LocalPath}}</h3>
+
+{{range $i, $f := .Files}}
+
+<div class=thumbnail><a href="{{$f.Url}}"><img src="/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a></div>
+
+{{end}}
+
+</body>
