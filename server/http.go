@@ -102,39 +102,42 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	localpath := filepath.Join(homedir, relpath)
 
-	st, err := os.Stat(localpath)
+	fh, err := os.Open(localpath)
+	if err != nil {
+		w.WriteHeader(404)
+		WriteError(w, r, "%s", err)
+		return
+	}
+	defer fh.Close()
+	st, err := fh.Stat()
 	if err != nil {
 		w.WriteHeader(404)
 		WriteError(w, r, "%s", err)
 		return
 	}
 
+	if st.IsDir() == false {
+		// serve the object directly
+		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+		return
+	}
+
 	filenames := make([]string, 0)
 	directories := make([]string, 0)
-	if st.IsDir() {
-		f, err := os.Open(localpath)
-		if err != nil {
-			WriteError(w, r, "open: %s", err)
-			return
-		}
-		defer f.Close()
 
-		files, err := f.Readdir(-1)
-		if err != nil {
-			WriteError(w, r, "readdir: %s", err)
-			return
-		}
-		for _, file := range files {
-			if file.IsDir() {
-				directories = append(directories, file.Name())
-			} else {
-				filenames = append(filenames, file.Name())
-			}
-		}
-		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
-	} else {
-		hndlr.Layout, err = filetype.Determine(localpath)
+	files, err := fh.Readdir(-1)
+	if err != nil {
+		WriteError(w, r, "readdir: %s", err)
+		return
 	}
+	for _, file := range files {
+		if file.IsDir() {
+			directories = append(directories, file.Name())
+		} else {
+			filenames = append(filenames, file.Name())
+		}
+	}
+	hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	hndlr.Filenames = filenames
 	hndlr.Directories = directories
 
