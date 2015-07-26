@@ -13,6 +13,9 @@ type ApplicationConfig struct {
 	Hostname      string
 	StartupBanner string
 
+	AutoUpgrade bool
+	AutoRestart bool
+
 	Http HttpConfig
 }
 
@@ -72,6 +75,8 @@ func GetDefaultConfig() *ApplicationConfig {
 	return &ApplicationConfig{
 		Hostname:      hostname,
 		StartupBanner: "Ready",
+		AutoUpgrade:   true,
+		AutoRestart:   true,
 		Http: HttpConfig{
 			BindAddr: ":8181",
 			MaxConns: 1000000,
