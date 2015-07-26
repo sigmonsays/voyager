@@ -38,6 +38,7 @@ func NewServer(addr string) *Server {
 	}
 
 	mux.Handle("/", s)
+	mux.HandleFunc("/image/", s.ImageHandler)
 	return s
 }
 
