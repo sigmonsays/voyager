@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"github.com/sigmonsays/go-apachelog"
+
+	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
@@ -38,6 +40,9 @@ func NewServer(addr string) *Server {
 	}
 
 	mux.Handle("/", s)
+
+	mux.HandleFunc("/favicon.ico", asset.Handler)
+	mux.HandleFunc("/s/", asset.Handler)
 	mux.HandleFunc("/image/", s.ImageHandler)
 	return s
 }
