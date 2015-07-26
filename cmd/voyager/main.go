@@ -13,6 +13,14 @@ import (
 	reload_git "github.com/sigmonsays/git-watch/reload/git"
 )
 
+func Shell(args ...string) error {
+	cmd := exec.Command(args[0], args[1:]...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	return err
+}
+
 func main() {
 	var err error
 	cfg := config.GetDefaultConfig()
@@ -34,10 +42,12 @@ func main() {
 		gw := reload_git.NewGitWatch(".", "master")
 		gw.Interval = 30
 		gw.OnChange = func(dir, branch, lhash, rhash string) error {
-			cmd := exec.Command("go", "install", "-v", "./...")
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Run()
+			err = Shell("git", "pull")
+			if err != nil {
+				log.Warnf("git pull error: %s", err)
+			}
+
+			err = Shell("go", "install", "-v", "./...")
 			if err != nil {
 				log.Warnf("go install error: %s", err)
 			}
