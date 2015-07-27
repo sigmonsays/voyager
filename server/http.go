@@ -142,8 +142,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			filenames = append(filenames, file.Name())
 		}
 	}
-	directories = sort.StringSlice(directories)
-	filenames = sort.StringSlice(filenames)
+	sort.Strings(directories)
+	sort.Strings(filenames)
 
 	hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	hndlr.Filenames = filenames
