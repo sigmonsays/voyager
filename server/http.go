@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/sigmonsays/go-apachelog"
@@ -126,8 +127,8 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filenames := make([]string, 0)
 	directories := make([]string, 0)
+	filenames := make([]string, 0)
 
 	files, err := fh.Readdir(-1)
 	if err != nil {
@@ -141,6 +142,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			filenames = append(filenames, file.Name())
 		}
 	}
+	directories = sort.StringSlice(directories)
+	filenames = sort.StringSlice(filenames)
+
 	hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	hndlr.Filenames = filenames
 	hndlr.Directories = directories
