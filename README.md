@@ -6,11 +6,11 @@ voyager is a http server which can render file listings using the appropriate la
 on the types of files found.
 
 # features
+- context aware layout (photos, video, audio, etc)
+- image resize for thumbnails
 
-- image resize 
 
 # install
-
     
     export GOPATH=$HOME/go
     go get -u github.com/sigmonsays/voyager/cmd/voyager
@@ -20,6 +20,9 @@ create ~/.voyager file with the paths you wish to allow. They are relative to yo
 
     allow:
     - Pictures
+
+The path to access files from your home directory is access via ~/username on the URL. So the url for Pictures in the previous example
+would be /~user/Pictures.
 
 # configuration
 
