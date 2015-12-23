@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,8 +24,11 @@ func Shell(args ...string) error {
 }
 
 func main() {
-	var err error
 	cfg := config.GetDefaultConfig()
+	flag.StringVar(&cfg.Http.BindAddr, "bind", cfg.Http.BindAddr, "bind address")
+	flag.Parse()
+
+	var err error
 
 	cfgfile := filepath.Join(os.Getenv("HOME"), ".voyager")
 	if util.FileExists(cfgfile) {
