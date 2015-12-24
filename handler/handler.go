@@ -15,8 +15,8 @@ type Handler struct {
 	// ~/username portion
 	UrlPrefix string
 
-	// home directory
-	Homedir string
+	// local path
+	RootPath string
 
 	// path relative to ~/username/
 	Path        string
@@ -25,7 +25,7 @@ type Handler struct {
 }
 
 func (h *Handler) LocalPath() string {
-	return filepath.Join(h.Homedir, h.Path)
+	return filepath.Join(h.RootPath, h.Path)
 }
 func (h *Handler) Url(paths ...string) string {
 	return filepath.Join(h.UrlPrefix, filepath.Join(paths...))

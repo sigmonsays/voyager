@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"text/template"
 
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/filetype"
@@ -43,12 +44,16 @@ func (f *File) Basename() string {
 }
 
 func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := asset.GetTemplate("picture.html")
+	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath())
+
+	tmplData, err := asset.Asset("picture.html")
 	if err != nil {
 		WriteError(w, r, "template: %s", err)
 		return
 	}
-	log.Tracef("handler %#v", h.Handler)
+
+	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
+
 	data := &Gallery{
 		Title:     "Pictures",
 		Files:     make([]*File, 0),
@@ -56,6 +61,8 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		LocalPath: h.LocalPath(),
 		Breadcrum: make([]*Breadcrum, 0),
 	}
+
+	log.Tracef("handler %#v data %+v", h.Handler, data)
 
 	tmp := strings.Split(h.Path, "/")
 	for i := 0; i < len(tmp); i++ {
@@ -76,7 +83,8 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
 		f := &File{
-			Url:  h.Url(h.Path, filename),
+			// Url:  h.Url(h.Path, filename),
+			Url:  filename,
 			Name: filename,
 		}
 		data.Files = append(data.Files, f)

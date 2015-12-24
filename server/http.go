@@ -108,7 +108,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Warnf("relpath %s", err)
 		}
-		urlprefix = r.URL.Path
+		urlprefix = filepath.Dir(r.URL.Path)
 
 		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
 	} else {
@@ -156,8 +156,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("dispatch ListHandler user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
 			username, rootpath, relpath, localpath, urlprefix)
 
-		objectHandler := handler.NewListHandler(hndlr)
-		objectHandler.ServeHTTP(w, r)
+		http.StripPrefix(urlprefix, http.FileServer(http.Dir(filepath.Dir(localpath)))).ServeHTTP(w, r)
+
+		// objectHandler := handler.NewListHandler(hndlr)
+		// objectHandler.ServeHTTP(w, r)
 
 		return
 	}

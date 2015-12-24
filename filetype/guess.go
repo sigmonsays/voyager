@@ -24,6 +24,6 @@ func GuessLayout(localpath string, filenames []string) FileType {
 			cnt = numfiles
 		}
 	}
-
+	log.Debugf("guessed layout for %s as %s", localpath, layout)
 	return layout
 }

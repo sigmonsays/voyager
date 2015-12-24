@@ -32,4 +32,8 @@ default configuration file is ~/.voyager
 - autoupgrade - bool - if you run voyager with $GOPATH set the program will auto upgrade when changes are detected
 - autorestart - bool - automatically restart daemon if the binary changes (useful with autoupgrade)
 - http.bindaddr - string - http bind address. default is :8181
+- allow - list - list of paths to allow from your home directory
+- layouts - map - map of paths enforcing a layout. Most significant path is used.
+- alias - map - map of top path name to alias local path
+
 
