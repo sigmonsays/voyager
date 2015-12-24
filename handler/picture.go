@@ -84,7 +84,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
 		f := &File{
 			// Url:  h.Url(h.Path, filename),
-			Url:  filename,
+			Url:  h.Url(h.Path, filename),
 			Name: filename,
 		}
 		data.Files = append(data.Files, f)

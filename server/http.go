@@ -94,10 +94,17 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(tmp) < 3 {
+		// TODO: Do we want to support any kind of top level index?
+		WriteError(w, r, "incomplete path")
+		return
+	}
+
 	var localpath string
 	var rootpath string
 	var relpath string
 	var urlprefix string
+
 	topdir := tmp[2]
 	alias, is_alias := voy.Alias[topdir]
 
@@ -113,12 +120,13 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
 	} else {
 		rootpath = homedir
+		localpath = filepath.Join(homedir, strings.Join(tmp[2:], "/"))
 		relpath, err = filepath.Rel(rootpath, localpath)
 		if err != nil {
-			log.Warnf("relpath %s", err)
+			log.Warnf("relpath rootpath:%s localpath:%s : %s", rootpath, localpath, err)
 		}
-		localpath = filepath.Join(homedir, relpath)
 		if voy.Allowed(relpath) == false {
+			log.Warnf("rootpath:%s localpath:%s relpath:%s not allowed", rootpath, localpath, relpath)
 			w.WriteHeader(403)
 			WriteError(w, r, "nothing to see here. bye bye.")
 			return
@@ -156,7 +164,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("dispatch ListHandler user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
 			username, rootpath, relpath, localpath, urlprefix)
 
-		http.StripPrefix(urlprefix, http.FileServer(http.Dir(filepath.Dir(localpath)))).ServeHTTP(w, r)
+		http.StripPrefix(urlprefix, http.FileServer(http.Dir(rootpath))).ServeHTTP(w, r)
 
 		// objectHandler := handler.NewListHandler(hndlr)
 		// objectHandler.ServeHTTP(w, r)
