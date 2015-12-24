@@ -18,7 +18,6 @@ type Handler struct {
 	// local path
 	RootPath string
 
-	// path relative to ~/username/
 	Path        string
 	Directories []string
 	Filenames   []string

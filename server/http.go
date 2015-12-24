@@ -115,7 +115,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Warnf("relpath %s", err)
 		}
-		urlprefix = filepath.Dir(r.URL.Path)
+		urlprefix = "/~" + filepath.Join(username, topdir)
 
 		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
 	} else {
