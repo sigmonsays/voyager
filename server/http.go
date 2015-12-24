@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/sigmonsays/go-apachelog"
 
 	"github.com/sigmonsays/voyager/asset"
@@ -44,10 +45,19 @@ func NewServer(addr string) *Server {
 
 	mux.Handle("/", s)
 
-	mux.HandleFunc("/favicon.ico", asset.Handler)
-	mux.HandleFunc("/s/", asset.Handler)
 	mux.HandleFunc("/image/", s.ImageHandler)
 	mux.HandleFunc("/c/", s.CacheHandler)
+
+	static := http.FileServer(
+		&assetfs.AssetFS{
+			Asset:     asset.Asset,
+			AssetDir:  asset.AssetDir,
+			AssetInfo: asset.AssetInfo,
+			Prefix:    ""},
+	)
+	mux.Handle("/s/", http.StripPrefix("/s", static))
+	mux.Handle("/favicon.ico", static)
+
 	return s
 }
 
@@ -84,28 +94,48 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	relpath, err := filepath.Rel("/~"+username+"/", path)
-	if err != nil {
-		log.Warnf("relpath %s", err)
+	var localpath string
+	var rootpath string
+	var relpath string
+	var urlprefix string
+	topdir := tmp[2]
+	alias, is_alias := voy.Alias[topdir]
+
+	if is_alias {
+		localpath = filepath.Join(alias, strings.Join(tmp[3:], "/"))
+		rootpath = alias
+		relpath, err = filepath.Rel(rootpath, localpath)
+		if err != nil {
+			log.Warnf("relpath %s", err)
+		}
+		urlprefix = r.URL.Path
+
+		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
+	} else {
+		rootpath = homedir
+		relpath, err = filepath.Rel(rootpath, localpath)
+		if err != nil {
+			log.Warnf("relpath %s", err)
+		}
+		localpath = filepath.Join(homedir, relpath)
+		if voy.Allowed(relpath) == false {
+			w.WriteHeader(403)
+			WriteError(w, r, "nothing to see here. bye bye.")
+			return
+		}
+		urlprefix = "/~" + username
 	}
 
-	if voy.Allowed(relpath) == false {
-		w.WriteHeader(403)
-		WriteError(w, r, "bye bye")
-		return
-	}
-
-	log.Infof("user=%s path=%s", username, relpath)
+	log.Infof("request user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
+		username, rootpath, relpath, localpath, urlprefix)
 
 	// dispatch handler to appropriate handler based on content
 	hndlr := &handler.Handler{
 		Username:  username,
-		Homedir:   homedir,
+		RootPath:  rootpath,
 		Path:      relpath,
-		UrlPrefix: "/~" + username,
+		UrlPrefix: urlprefix,
 	}
-
-	localpath := filepath.Join(homedir, relpath)
 
 	fh, err := os.Open(localpath)
 	if err != nil {
@@ -123,7 +153,12 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	if st.IsDir() == false {
 		// serve the object directly
-		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+		log.Debugf("dispatch ListHandler user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
+			username, rootpath, relpath, localpath, urlprefix)
+
+		objectHandler := handler.NewListHandler(hndlr)
+		objectHandler.ServeHTTP(w, r)
+
 		return
 	}
 
@@ -145,11 +180,31 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	sort.Strings(directories)
 	sort.Strings(filenames)
 
-	hndlr.Layout = filetype.GuessLayout(localpath, filenames)
+	var customLayout string
+	ltmp := strings.Split(localpath, "/")
+Layout:
+	for i := len(ltmp); i > 1; i-- {
+		p := strings.Join(ltmp[:i], "/")
+		log.Tracef("check custom layout %s", p)
+		l, found := voy.Layouts[p]
+		if found {
+			customLayout = l
+			break Layout
+		}
+	}
+
+	if customLayout == "" {
+		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
+	} else {
+		hndlr.Layout = filetype.TypeFromString(customLayout)
+		log.Debugf("using custom layout %s for %s", hndlr.Layout, localpath)
+	}
+
 	hndlr.Filenames = filenames
 	hndlr.Directories = directories
 
-	log.Infof("path %s %d files, %d dirs, layout %s", localpath, len(filenames), len(directories), hndlr.Layout)
+	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d dirs:%d",
+		hndlr.Layout, username, rootpath, relpath, localpath, urlprefix, len(filenames), len(directories))
 
 	if hndlr.Layout == filetype.PictureFile {
 		handler.NewPictureHandler(hndlr).ServeHTTP(w, r)

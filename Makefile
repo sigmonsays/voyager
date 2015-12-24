@@ -3,5 +3,4 @@ all:
 	$(MAKE) -C asset
 
 dev:
-	go get github.com/tv42/becky
-	go get golang.org/x/tools/cmd/stringer
+	$(MAKE) -C asset dev
