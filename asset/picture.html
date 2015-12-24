@@ -12,7 +12,7 @@
 
 <h2>Pictures in {{.Path}}</h2>
 
-{{if ..Directories}}
+{{if .Directories}}
 <div class=directories>
    {{range $i, $f := .Directories}}
    <a href="{{$f.Url}}">{{$f.Basename}}</a> &nbsp;
