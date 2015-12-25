@@ -13,6 +13,7 @@ import (
 	"github.com/sigmonsays/voyager/util/devrestarter"
 
 	reload_git "github.com/sigmonsays/git-watch/reload/git"
+	gologging "github.com/sigmonsays/go-logging"
 )
 
 func Shell(args ...string) error {
@@ -39,6 +40,11 @@ func main() {
 			return
 		}
 	}
+
+	if cfg.LogLevel != "" {
+		gologging.SetLogLevel(cfg.LogLevel)
+	}
+	gologging.SetLogLevels(cfg.LogLevels)
 
 	if cfg.AutoRestart {
 		devrestarter.Init()

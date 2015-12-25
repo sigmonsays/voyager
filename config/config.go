@@ -10,6 +10,7 @@ import (
 
 type ApplicationConfig struct {
 	LogLevel      string
+	LogLevels     map[string]string
 	Hostname      string
 	StartupBanner string
 
@@ -79,6 +80,7 @@ func GetDefaultConfig() *ApplicationConfig {
 		AutoUpgrade:   true,
 		AutoRestart:   true,
 		CacheDir:      "/tmp/voyager",
+		LogLevels:     make(map[string]string, 0),
 		Http: HttpConfig{
 			BindAddr: ":8181",
 			MaxConns: 1000000,

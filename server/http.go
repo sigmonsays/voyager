@@ -181,6 +181,10 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for _, file := range files {
+		// should this be an option? skip hidden files..
+		if strings.HasPrefix(file.Name(), ".") {
+			continue
+		}
 		if file.IsDir() {
 			directories = append(directories, file.Name())
 		} else {
