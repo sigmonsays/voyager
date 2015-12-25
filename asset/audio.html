@@ -20,18 +20,21 @@ $(document).ready(function(){
          playlist.push(r)
       {{end}}
 
-   new jPlayerPlaylist({
+   var jplayer = new jPlayerPlaylist({
       jPlayer: "#jquery_jplayer_1",
-      cssSelectorAncestor: "#jp_container_1"
+      cssSelectorAncestor: "#jp_container_1",
    }, playlist, {
          swfPath: "/s/jPlayer/jplayer/jquery.jplayer.swf",
          supplied: "oga, mp3",
          wmode: "window",
          useStateClassSkin: true,
          autoBlur: false,
-         smoothPlayBar: true,
-         keyEnabled: true
+         smoothPlayBar: false,
+         keyEnabled: true,
    });
+   jplayer.option("addTime", 0)
+   jplayer.option("displayTime", 0)
+   jplayer.option("removeTime", 0)
 
 });
 
