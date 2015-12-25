@@ -8,6 +8,9 @@ import (
 	"github.com/sigmonsays/voyager/filetype"
 )
 
+type ContentHandler interface {
+}
+
 type Handler struct {
 	Layout   filetype.FileType
 	Username string

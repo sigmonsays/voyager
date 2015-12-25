@@ -8,6 +8,15 @@ import (
 	"strings"
 )
 
+type FileType int
+
+const (
+	UnknownFile FileType = iota
+	PictureFile
+	VideoFile
+	AudioFile
+)
+
 var Picture = map[string]bool{
 	"jpg":  true,
 	"gif":  true,
@@ -26,15 +35,6 @@ var Audio = map[string]bool{
 	"wav": true,
 	"m3u": true,
 }
-
-type FileType int
-
-const (
-	UnknownFile FileType = iota
-	PictureFile
-	VideoFile
-	AudioFile
-)
 
 // extension mapping
 var FileTypes map[string]FileType

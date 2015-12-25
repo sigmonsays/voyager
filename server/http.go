@@ -24,23 +24,25 @@ type Server struct {
 	Addr string
 	Conf *config.ApplicationConfig
 
-	Cache *cache.FileCache
+	Cache   *cache.FileCache
+	Factory *handler.HandlerFactory
 
 	srv *http.Server
 }
 
 func NewServer(addr string) *Server {
 	mux := http.NewServeMux()
-	handler := apachelog.NewHandler(mux, os.Stderr)
+	hndlr := apachelog.NewHandler(mux, os.Stderr)
 
 	srv := &http.Server{
 		Addr:    addr,
-		Handler: handler,
+		Handler: hndlr,
 	}
 
 	s := &Server{
-		Addr: addr,
-		srv:  srv,
+		Addr:    addr,
+		srv:     srv,
+		Factory: handler.NewHandlerFactory(),
 	}
 
 	mux.Handle("/", s)
@@ -220,10 +222,11 @@ Layout:
 	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d dirs:%d",
 		hndlr.Layout, username, rootpath, relpath, localpath, urlprefix, len(filenames), len(directories))
 
-	if hndlr.Layout == filetype.PictureFile {
-		handler.NewPictureHandler(hndlr).ServeHTTP(w, r)
-	} else {
+	reqHandler := s.Factory.MakeHandler(hndlr)
+	if reqHandler == nil {
 		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+	} else {
+		reqHandler.ServeHTTP(w, r)
 	}
 
 }
