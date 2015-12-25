@@ -9,18 +9,17 @@ import (
 	"github.com/sigmonsays/voyager/filetype"
 )
 
-// provides listing pictures and auto thumbnailing
-type PictureHandler struct {
+type AudioHandler struct {
 	*Handler
 }
 
-func NewPictureHandler(handler *Handler) *PictureHandler {
-	return &PictureHandler{
+func NewAudioHandler(handler *Handler) *AudioHandler {
+	return &AudioHandler{
 		Handler: handler,
 	}
 }
 
-type Gallery struct {
+type Playlist struct {
 	Path        string
 	LocalPath   string
 	Title       string
@@ -29,19 +28,19 @@ type Gallery struct {
 	Breadcrum   []*Breadcrum
 }
 
-func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath())
 
-	tmplData, err := asset.Asset("picture.html")
+	tmplData, err := asset.Asset("audio.html")
 	if err != nil {
 		WriteError(w, r, "template: %s", err)
 		return
 	}
 
-	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
+	tmpl := template.Must(template.New("audio.html").Parse(string(tmplData)))
 
-	data := &Gallery{
-		Title:     "Pictures",
+	data := &Playlist{
+		Title:     "Audio",
 		Files:     make([]*File, 0),
 		Path:      h.Path,
 		LocalPath: h.LocalPath(),
@@ -67,7 +66,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		data.Directories = append(data.Directories, f)
 	}
 
-	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
+	for _, filename := range filetype.Filter(h.Filenames, filetype.AudioFile) {
 		f := &File{
 			// Url:  h.Url(h.Path, filename),
 			Url:  h.Url(h.Path, filename),

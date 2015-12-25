@@ -6,7 +6,7 @@ all: deps
 	go-bindata $(FLAGS) *
 
 dev: deps
-	go-bindata $(FLAGS) -debug *
+	go-bindata $(FLAGS) -debug * $(shell find jPlayer/ -type f)
 
 deps:
 	go get github.com/jteeuwen/go-bindata/...
