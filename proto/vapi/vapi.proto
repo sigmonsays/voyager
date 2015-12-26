@@ -1,0 +1,19 @@
+
+syntax = "proto3";
+
+package vapi;
+
+service VApi {
+   rpc Ping(PingRequest) returns (PingResponse) {}
+
+}
+
+// RPC Ping
+message PingRequest {
+   string message = 1;
+};
+message PingResponse {
+   string message = 1;
+};
+
+

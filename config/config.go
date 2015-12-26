@@ -18,7 +18,8 @@ type ApplicationConfig struct {
 	AutoRestart bool
 	CacheDir    string
 
-	Http HttpConfig
+	Http *HttpConfig
+	Rpc  *RpcConfig
 }
 
 type HttpConfig struct {
@@ -26,6 +27,10 @@ type HttpConfig struct {
 
 	// maximum number of concurrent requests we'll process (
 	MaxConns int
+}
+
+type RpcConfig struct {
+	BindAddr string
 }
 
 func (c *ApplicationConfig) LoadDefault() {
@@ -81,9 +86,12 @@ func GetDefaultConfig() *ApplicationConfig {
 		AutoRestart:   true,
 		CacheDir:      "/tmp/voyager",
 		LogLevels:     make(map[string]string, 0),
-		Http: HttpConfig{
+		Http: &HttpConfig{
 			BindAddr: ":8181",
 			MaxConns: 1000000,
+		},
+		Rpc: &RpcConfig{
+			BindAddr: ":8191",
 		},
 	}
 }
