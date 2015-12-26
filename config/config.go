@@ -20,6 +20,8 @@ type ApplicationConfig struct {
 
 	Http *HttpConfig
 	Rpc  *RpcConfig
+
+	Servers map[string]string
 }
 
 type HttpConfig struct {
@@ -31,6 +33,8 @@ type HttpConfig struct {
 
 type RpcConfig struct {
 	BindAddr string
+
+	Secret string
 }
 
 func (c *ApplicationConfig) LoadDefault() {
@@ -92,7 +96,9 @@ func GetDefaultConfig() *ApplicationConfig {
 		},
 		Rpc: &RpcConfig{
 			BindAddr: ":8191",
+			Secret:   "changeme",
 		},
+		Servers: make(map[string]string, 0),
 	}
 }
 

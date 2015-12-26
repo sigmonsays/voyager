@@ -10,6 +10,7 @@ import (
 	"github.com/sigmonsays/voyager/api"
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
+	"github.com/sigmonsays/voyager/handler"
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/server"
 	"github.com/sigmonsays/voyager/util"
@@ -92,10 +93,14 @@ func main() {
 		return
 	}
 
+	// core components
+	handlerFactory := handler.NewHandlerFactory()
+
 	// the HTTP server
 	srv := server.NewServer(cfg.Http.BindAddr)
 	srv.Conf = cfg
 	srv.Cache = cache
+	srv.Factory = handlerFactory
 	go func() {
 		err = srv.Start()
 		if err != nil {
@@ -111,6 +116,8 @@ func main() {
 	}
 	http2_serv := grpc.NewServer()
 	http2_api := api.MakeApi(cfg)
+	http2_api.WithHandlerFactory(handlerFactory)
+
 	vapi.RegisterVApiServer(http2_serv, http2_api)
 
 	log.Infof("%s", cfg.StartupBanner)

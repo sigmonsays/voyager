@@ -33,16 +33,14 @@ type Server struct {
 func NewServer(addr string) *Server {
 	mux := http.NewServeMux()
 	hndlr := apachelog.NewHandler(mux, os.Stderr)
-
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: hndlr,
 	}
 
 	s := &Server{
-		Addr:    addr,
-		srv:     srv,
-		Factory: handler.NewHandlerFactory(),
+		Addr: addr,
+		srv:  srv,
 	}
 
 	mux.Handle("/", s)
