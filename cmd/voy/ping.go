@@ -34,7 +34,9 @@ func (ac *Application) Ping(c *cli.Context) {
 
 	fmt.Printf("ping: host %s: message: %s\n", host, message)
 
-	md := metadata.Pairs("secret", ac.Cfg.Rpc.Secret)
+	log.Tracef("request-secret:%s", ac.Cfg.Rpc.Secret)
+
+	md := metadata.Pairs("request-secret", ac.Cfg.Rpc.Secret)
 	ctx := context.Background()
 	ctx = metadata.NewContext(ctx, md)
 
