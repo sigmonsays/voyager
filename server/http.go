@@ -212,7 +212,7 @@ Layout:
 		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	} else {
 		hndlr.Layout = filetype.TypeFromString(customLayout)
-		log.Debugf("using custom layout %s (%s) for %s", hndlr.Layout, customLayout, localpath)
+		log.Debugf("using custom layout %s (%q) for %s", hndlr.Layout, customLayout, localpath)
 	}
 
 	hndlr.Filenames = filenames
