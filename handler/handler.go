@@ -6,9 +6,11 @@ import (
 	"path/filepath"
 
 	"github.com/sigmonsays/voyager/filetype"
+	"github.com/sigmonsays/voyager/types"
 )
 
 type ContentHandler interface {
+	ListPath(req types.ListPathRequest) (*types.ListPathResponse, error)
 }
 
 type Handler struct {

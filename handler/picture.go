@@ -7,6 +7,7 @@ import (
 
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/filetype"
+	"github.com/sigmonsays/voyager/types"
 )
 
 // provides listing pictures and auto thumbnailing
@@ -24,9 +25,9 @@ type Gallery struct {
 	Path        string
 	LocalPath   string
 	Title       string
-	Files       []*File
-	Directories []*File
-	Breadcrum   []*Breadcrum
+	Files       []*types.File
+	Directories []*types.File
+	Breadcrumb  *Breadcrumb
 }
 
 func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -41,26 +42,22 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
 
 	data := &Gallery{
-		Title:     "Pictures",
-		Files:     make([]*File, 0),
-		Path:      h.Path,
-		LocalPath: h.LocalPath(),
-		Breadcrum: make([]*Breadcrum, 0),
+		Title:      "Pictures",
+		Files:      make([]*types.File, 0),
+		Path:       h.Path,
+		LocalPath:  h.LocalPath(),
+		Breadcrumb: NewBreadcrumb(),
 	}
 
 	log.Tracef("handler %#v data %+v", h.Handler, data)
 
 	tmp := strings.Split(h.Path, "/")
 	for i := 0; i < len(tmp); i++ {
-		b := &Breadcrum{
-			Url:  h.Url(strings.Join(tmp[0:i+1], "/")),
-			Name: tmp[i],
-		}
-		data.Breadcrum = append(data.Breadcrum, b)
+		data.Breadcrumb.Add(h.Url(strings.Join(tmp[0:i+1], "/")), tmp[i])
 	}
 
 	for _, dirname := range h.Directories {
-		f := &File{
+		f := &types.File{
 			Url:  h.Url(h.Path, dirname),
 			Name: dirname,
 		}
@@ -68,7 +65,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
-		f := &File{
+		f := &types.File{
 			// Url:  h.Url(h.Path, filename),
 			Url:  h.Url(h.Path, filename),
 			Name: filename,

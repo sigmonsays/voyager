@@ -6,7 +6,7 @@
 <body>
 <div class=page>
 
-{{range $i, $b := .Breadcrum}}
+{{range $i, $b := .Breadcrumb.Crumbs}}
 <a href="{{$b.Url}}">{{$b.Name}}</a> 
 {{end}}
 
