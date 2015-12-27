@@ -52,6 +52,10 @@ func main() {
 	}
 	gologging.SetLogLevels(cfg.LogLevels)
 
+	if log.IsTrace() {
+		cfg.PrintYaml()
+	}
+
 	if cfg.AutoRestart {
 		devrestarter.Init()
 	}
