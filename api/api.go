@@ -36,11 +36,11 @@ func (api *VoyApi) Authenticate(ctx context.Context) error {
 		return fmt.Errorf("authenticate: no secret")
 	}
 
-	if len(secrets) < 1 {
+	if len(secrets) == 0 {
 		return fmt.Errorf("authenticate: no secret")
 	}
 	secret := secrets[0]
-	if secret != "" {
+	if secret == "" {
 		return fmt.Errorf("authenticate: empty secret")
 	}
 
