@@ -5,7 +5,6 @@ import (
 
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
-	"github.com/sigmonsays/voyager/proto/vapi"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
@@ -73,17 +72,4 @@ func (api *VoyApi) Authenticate(ctx context.Context) error {
 func (api *VoyApi) WithHandlerFactory(x *handler.HandlerFactory) *VoyApi {
 	api.Factory = x
 	return api
-}
-
-func (api *VoyApi) Ping(ctx context.Context, in *vapi.PingRequest) (*vapi.PingResponse, error) {
-
-	err := api.Authenticate(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	res := &vapi.PingResponse{
-		Message: in.Message,
-	}
-	return res, nil
 }
