@@ -30,7 +30,7 @@ ping the rpc service
 
 func (ac *Application) Ping(c *cli.Context) {
 	message := c.String("message")
-	host := c.String("host")
+	host := vapi.HostDefaultPort(c.String("host"), vapi.DefaultPortString)
 
 	fmt.Printf("ping: host %s: message: %s\n", host, message)
 
@@ -54,6 +54,6 @@ func (ac *Application) Ping(c *cli.Context) {
 		log.Warnf("Ping %s: %s", host, err)
 	}
 
-	fmt.Print("%#v\n", res)
+	fmt.Printf("%#v\n", res)
 
 }
