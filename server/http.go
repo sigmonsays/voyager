@@ -202,6 +202,7 @@ Layout:
 		log.Tracef("check custom layout %s", p)
 		l, found := voy.Layouts[p]
 		if found {
+			log.Tracef("found custom layout %s for %s", l, p)
 			customLayout = l
 			break Layout
 		}
@@ -211,7 +212,7 @@ Layout:
 		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
 	} else {
 		hndlr.Layout = filetype.TypeFromString(customLayout)
-		log.Debugf("using custom layout %s for %s", hndlr.Layout, localpath)
+		log.Debugf("using custom layout %s (%s) for %s", hndlr.Layout, customLayout, localpath)
 	}
 
 	hndlr.Filenames = filenames
