@@ -5,7 +5,14 @@ package vapi;
 
 service VApi {
    rpc Ping(PingRequest) returns (PingResponse) {}
+   rpc ListFiles(ListRequest) returns (ListResponse) {}
 
+}
+
+// primitives
+message File {
+   string name = 1;
+   int64 size = 2;
 }
 
 // RPC Ping
@@ -17,3 +24,13 @@ message PingResponse {
 };
 
 
+// RPC ListFiles
+message ListRequest {
+   string user = 1;
+   string path = 2;
+};
+message ListResponse {
+   ListRequest request = 1;
+   string LocalPath = 2;
+   repeated File Files = 3;
+};

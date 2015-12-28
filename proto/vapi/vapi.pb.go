@@ -9,8 +9,11 @@ It is generated from these files:
 	vapi.proto
 
 It has these top-level messages:
+	File
 	PingRequest
 	PingResponse
+	ListRequest
+	ListResponse
 */
 package vapi
 
@@ -28,6 +31,17 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+// primitives
+type File struct {
+	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Size int64  `protobuf:"varint,2,opt,name=size" json:"size,omitempty"`
+}
+
+func (m *File) Reset()                    { *m = File{} }
+func (m *File) String() string            { return proto.CompactTextString(m) }
+func (*File) ProtoMessage()               {}
+func (*File) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+
 // RPC Ping
 type PingRequest struct {
 	Message string `protobuf:"bytes,1,opt,name=message" json:"message,omitempty"`
@@ -36,7 +50,7 @@ type PingRequest struct {
 func (m *PingRequest) Reset()                    { *m = PingRequest{} }
 func (m *PingRequest) String() string            { return proto.CompactTextString(m) }
 func (*PingRequest) ProtoMessage()               {}
-func (*PingRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (*PingRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type PingResponse struct {
 	Message string `protobuf:"bytes,1,opt,name=message" json:"message,omitempty"`
@@ -45,11 +59,50 @@ type PingResponse struct {
 func (m *PingResponse) Reset()                    { *m = PingResponse{} }
 func (m *PingResponse) String() string            { return proto.CompactTextString(m) }
 func (*PingResponse) ProtoMessage()               {}
-func (*PingResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*PingResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+// RPC ListFiles
+type ListRequest struct {
+	User string `protobuf:"bytes,1,opt,name=user" json:"user,omitempty"`
+	Path string `protobuf:"bytes,2,opt,name=path" json:"path,omitempty"`
+}
+
+func (m *ListRequest) Reset()                    { *m = ListRequest{} }
+func (m *ListRequest) String() string            { return proto.CompactTextString(m) }
+func (*ListRequest) ProtoMessage()               {}
+func (*ListRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+
+type ListResponse struct {
+	Request   *ListRequest `protobuf:"bytes,1,opt,name=request" json:"request,omitempty"`
+	LocalPath string       `protobuf:"bytes,2,opt,name=LocalPath" json:"LocalPath,omitempty"`
+	Files     []*File      `protobuf:"bytes,3,rep,name=Files" json:"Files,omitempty"`
+}
+
+func (m *ListResponse) Reset()                    { *m = ListResponse{} }
+func (m *ListResponse) String() string            { return proto.CompactTextString(m) }
+func (*ListResponse) ProtoMessage()               {}
+func (*ListResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+
+func (m *ListResponse) GetRequest() *ListRequest {
+	if m != nil {
+		return m.Request
+	}
+	return nil
+}
+
+func (m *ListResponse) GetFiles() []*File {
+	if m != nil {
+		return m.Files
+	}
+	return nil
+}
 
 func init() {
+	proto.RegisterType((*File)(nil), "vapi.File")
 	proto.RegisterType((*PingRequest)(nil), "vapi.PingRequest")
 	proto.RegisterType((*PingResponse)(nil), "vapi.PingResponse")
+	proto.RegisterType((*ListRequest)(nil), "vapi.ListRequest")
+	proto.RegisterType((*ListResponse)(nil), "vapi.ListResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -60,6 +113,7 @@ var _ grpc.ClientConn
 
 type VApiClient interface {
 	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
+	ListFiles(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
 }
 
 type vApiClient struct {
@@ -79,10 +133,20 @@ func (c *vApiClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *vApiClient) ListFiles(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error) {
+	out := new(ListResponse)
+	err := grpc.Invoke(ctx, "/vapi.VApi/ListFiles", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for VApi service
 
 type VApiServer interface {
 	Ping(context.Context, *PingRequest) (*PingResponse, error)
+	ListFiles(context.Context, *ListRequest) (*ListResponse, error)
 }
 
 func RegisterVApiServer(s *grpc.Server, srv VApiServer) {
@@ -101,6 +165,18 @@ func _VApi_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return out, nil
 }
 
+func _VApi_ListFiles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
+	in := new(ListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	out, err := srv.(VApiServer).ListFiles(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 var _VApi_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "vapi.VApi",
 	HandlerType: (*VApiServer)(nil),
@@ -109,18 +185,29 @@ var _VApi_serviceDesc = grpc.ServiceDesc{
 			MethodName: "Ping",
 			Handler:    _VApi_Ping_Handler,
 		},
+		{
+			MethodName: "ListFiles",
+			Handler:    _VApi_ListFiles_Handler,
+		},
 	},
 	Streams: []grpc.StreamDesc{},
 }
 
 var fileDescriptor0 = []byte{
-	// 121 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2a, 0x4b, 0x2c, 0xc8,
-	0xd4, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x01, 0xb1, 0x95, 0xe4, 0xb8, 0xb8, 0x03, 0x32,
-	0xf3, 0xd2, 0x83, 0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x84, 0xf8, 0xb9, 0xd8, 0x73, 0x53, 0x8b,
-	0x8b, 0x13, 0xd3, 0x53, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x95, 0xe4, 0xb9, 0x78, 0x20, 0xf2,
-	0xc5, 0x05, 0xf9, 0x79, 0xc5, 0xa9, 0x18, 0x0a, 0x8c, 0xcc, 0xb9, 0x58, 0xc2, 0x1c, 0x0b, 0x32,
-	0x85, 0xf4, 0xb9, 0x58, 0x40, 0x0a, 0x85, 0x04, 0xf5, 0xc0, 0x76, 0x20, 0x19, 0x2a, 0x25, 0x84,
-	0x2c, 0x04, 0x31, 0x47, 0x89, 0x21, 0x89, 0x0d, 0xec, 0x0c, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0x08, 0x3b, 0xa7, 0x2f, 0x94, 0x00, 0x00, 0x00,
+	// 239 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x64, 0x90, 0x3f, 0x4f, 0xc3, 0x30,
+	0x10, 0xc5, 0x5b, 0x62, 0xa8, 0x72, 0x89, 0x84, 0x7a, 0x53, 0x60, 0x80, 0xea, 0x26, 0x58, 0x8a,
+	0x54, 0xf8, 0x02, 0x2c, 0x4c, 0x1d, 0x2a, 0x06, 0x66, 0x0c, 0x3a, 0x15, 0x4b, 0x4d, 0x62, 0x72,
+	0x2e, 0x03, 0x9f, 0x1e, 0xff, 0x49, 0xa9, 0xa5, 0x6e, 0xb9, 0xcb, 0x7b, 0xbf, 0xf7, 0xce, 0x00,
+	0x3f, 0xda, 0x9a, 0xa5, 0x1d, 0x7a, 0xd7, 0xa3, 0x0a, 0xdf, 0x44, 0xa0, 0x5e, 0xcc, 0x8e, 0xb1,
+	0x06, 0xd5, 0xe9, 0x96, 0x9b, 0xe9, 0x62, 0x7a, 0x57, 0x86, 0x49, 0xcc, 0x2f, 0x37, 0x67, 0x7e,
+	0x2a, 0xe8, 0x06, 0xaa, 0x8d, 0xe9, 0xb6, 0xaf, 0xfc, 0xbd, 0x67, 0x71, 0x78, 0x09, 0xb3, 0x96,
+	0x45, 0xf4, 0x76, 0x54, 0xd3, 0x2d, 0xd4, 0xe9, 0xbf, 0xd8, 0xbe, 0x13, 0x3e, 0x15, 0xdc, 0x43,
+	0xb5, 0x36, 0xe2, 0x0e, 0x00, 0x4f, 0xdf, 0x0b, 0x0f, 0xc7, 0x2c, 0xab, 0xdd, 0x57, 0xcc, 0x2a,
+	0xe9, 0x1d, 0xea, 0x24, 0x1d, 0x59, 0x04, 0xb3, 0x21, 0xd9, 0xa2, 0xbc, 0x5a, 0xcd, 0x97, 0xf1,
+	0x86, 0x9c, 0x37, 0x87, 0x72, 0xdd, 0x7f, 0xea, 0xdd, 0xe6, 0x1f, 0x83, 0x57, 0x70, 0x1e, 0xce,
+	0x92, 0xa6, 0x58, 0x14, 0xde, 0x04, 0xc9, 0x14, 0x56, 0xab, 0x16, 0xd4, 0xdb, 0xb3, 0x35, 0xf8,
+	0x00, 0x2a, 0xb4, 0xc6, 0x11, 0x98, 0x5d, 0x78, 0x8d, 0xf9, 0x2a, 0x15, 0xa1, 0x09, 0x3e, 0xf9,
+	0x18, 0x9f, 0x1a, 0xb9, 0x78, 0x5a, 0xe3, 0xe0, 0xca, 0xeb, 0xd3, 0xe4, 0xe3, 0x22, 0xbe, 0xf6,
+	0xe3, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xd8, 0x58, 0x54, 0x7e, 0x7b, 0x01, 0x00, 0x00,
 }
