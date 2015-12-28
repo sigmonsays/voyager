@@ -71,7 +71,6 @@ func (api *VoyApi) Authenticate(ctx context.Context) error {
 		}
 
 	*/
-
 }
 
 func (api *VoyApi) WithHandlerFactory(x *handler.HandlerFactory) *VoyApi {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/sigmonsays/voyager/proto/vapi"
+	"github.com/sigmonsays/voyager/types"
 
 	"golang.org/x/net/context"
 )
@@ -14,6 +15,30 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 	if err != nil {
 		return nil, err
 	}
+
+	// load the voy file
+	req := &types.ListPathRequest{
+		User: in.User,
+		Path: in.Path,
+	}
+
+	voy, err := api.VoyFile.Load(req)
+	if err != nil {
+		return nil, err
+	}
+
+	paths, err := api.VoyFile.ResolvePath(voy, req)
+	if err != nil {
+		return nil, err
+	}
+
+	// load the file contents
+	files, err := api.PathLoader.GetFiles(paths.LocalPath)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Tracef("files:%d", len(files))
 
 	res := &vapi.ListResponse{}
 	return res, nil

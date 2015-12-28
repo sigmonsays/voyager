@@ -1,14 +1,33 @@
 package types
 
 import (
+	"fmt"
 	"path/filepath"
 )
+
+// used to resolve the path from a voy file
+type PathRequest struct {
+	LocalPath string
+	RootPath  string
+	RelPath   string
+	UrlPrefix string
+}
+
+func (p *PathRequest) String() string {
+	return fmt.Sprintf("localpath:%s rootpath:%s relpath:%s urlprefix:%s",
+		p.LocalPath, p.RootPath, p.RelPath, p.UrlPrefix)
+}
 
 type ListPathRequest struct {
 	Server string
 	User   string
 	Path   string
 }
+
+func (p *ListPathRequest) String() string {
+	return fmt.Sprintf("server:%s user:%s path:%s", p.Server, p.User, p.Path)
+}
+
 type ListPathResponse struct {
 	*ListPathRequest
 	Title     string

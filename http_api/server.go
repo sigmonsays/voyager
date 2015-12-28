@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/user"
-	"path/filepath"
 	"strings"
 
 	"github.com/elazarl/go-bindata-assetfs"
@@ -156,93 +154,45 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 
 	voy, err := s.VoyFile.Load(req)
 	if err != nil {
-		WriteError(w, r, "load voyfile %s: %s", req.User, err)
+		WriteError(w, r, "load voyfile %s: %s", req, err)
+		return
+	}
+
+	paths, err := s.VoyFile.ResolvePath(voy, req)
+	if err != nil {
+		WriteError(w, r, "voyfile resolve path %s: %s", req, err)
 		return
 	}
 
 	log.Tracef("voyfile allow:%+v alias:%+v servers:%+v", voy.Allow, voy.Alias, voy.Servers)
 
-	// we still need to lookup the user to get the home directory
-	// because paths that do not start with a / are relative to the home directory
-	user_ent, err := user.Lookup(req.User)
-	if err != nil {
-		WriteError(w, r, "user lookup %s: %s", req.User, err)
-		return
-	}
-	homedir := user_ent.HomeDir
-
-	tmp := strings.Split(req.Path, "/")
-	if len(tmp) < 3 {
-		// TODO: Do we want to support any kind of top level index?
-		WriteError(w, r, "incomplete path")
-		return
-	}
-
-	var localpath string
-	var rootpath string
-	var relpath string
-	var urlprefix string
-
-	topdir := tmp[2]
-	alias, is_alias := voy.Alias[topdir]
-
-	if is_alias {
-		localpath = filepath.Join(alias, strings.Join(tmp[3:], "/"))
-		rootpath = alias
-		relpath, err = filepath.Rel(rootpath, localpath)
-		if err != nil {
-			log.Warnf("relpath %s", err)
-		}
-		urlprefix = "/~" + filepath.Join(req.User, topdir)
-
-		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
-	} else {
-		rootpath = homedir
-		localpath = filepath.Join(homedir, strings.Join(tmp[1:], "/"))
-		relpath, err = filepath.Rel(rootpath, localpath)
-		if err != nil {
-			log.Warnf("relpath rootpath:%s localpath:%s : %s", rootpath, localpath, err)
-		}
-		if voy.Allowed(relpath) == false {
-			log.Warnf("rootpath:%s localpath:%s relpath:%s not allowed", rootpath, localpath, relpath)
-			w.WriteHeader(403)
-			WriteError(w, r, "nothing to see here. bye bye.")
-			return
-		}
-		urlprefix = "/~" + req.User
-		log.Debugf("%s is regular path (localpath:%s relpath:%s urlprefix:%s)", req.Path, localpath, relpath, urlprefix)
-	}
-
-	log.Infof("request user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
-		req.User, rootpath, relpath, localpath, urlprefix)
-
 	// dispatch handler to appropriate handler based on content
 	hndlr := &handler.Handler{
 		Username:  req.User,
-		RootPath:  rootpath,
-		Path:      relpath,
-		UrlPrefix: urlprefix,
+		RootPath:  paths.RootPath,
+		Path:      paths.RelPath,
+		UrlPrefix: paths.UrlPrefix,
 	}
 
 	// call the path loader
-	files, err := s.PathLoader.GetFiles(localpath)
+	files, err := s.PathLoader.GetFiles(paths.LocalPath)
 	if err != nil {
 		WriteError(w, r, "path loader GetFiles: %s", err)
 		return
 	}
 
 	// determine the layout
-	layout, err := s.Layout.Resolve(voy, localpath, files)
+	layout, err := s.Layout.Resolve(voy, paths.LocalPath, files)
 	if err != nil {
-		WriteError(w, r, "resolve layout %s: %s", localpath, err)
+		WriteError(w, r, "resolve layout %s: %s", paths.LocalPath, err)
 		return
 	}
 
 	hndlr.Layout = layout
 	hndlr.Files = files
 
-	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d",
-		hndlr.Layout, req.User, rootpath, relpath, localpath, urlprefix, len(files))
+	log.Debugf("dispatch %s user:%s files:%d %s",
+		hndlr.Layout, req.User, len(files), paths)
 
 	reqHandler := s.Factory.MakeHandler(hndlr)
 	if reqHandler == nil {
