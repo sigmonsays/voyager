@@ -13,6 +13,7 @@ type VoyFile struct {
 	Allow   []string
 	Alias   map[string]string
 	Layouts map[string]string
+	Servers map[string]string
 }
 
 func (c *VoyFile) Allowed(path string) bool {
@@ -67,6 +68,7 @@ func DefaultConfig() *VoyFile {
 		Allow:   make([]string, 0),
 		Alias:   make(map[string]string, 0),
 		Layouts: make(map[string]string, 0),
+		Servers: make(map[string]string, 0),
 	}
 }
 
