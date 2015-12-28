@@ -41,36 +41,38 @@ func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("audio.html").Parse(string(tmplData)))
 
 	data := &Playlist{
-		Title:      "Audio",
-		Files:      make([]*types.File, 0),
-		Path:       h.Path,
-		LocalPath:  h.LocalPath(),
-		Breadcrumb: NewBreadcrumb(),
+		Title:       "Audio",
+		Files:       make([]*types.File, 0),
+		Directories: make([]*types.File, 0),
+		Path:        h.Path,
+		LocalPath:   h.LocalPath(),
+		Breadcrumb:  NewBreadcrumb(),
 	}
-
-	log.Tracef("handler %#v data %+v", h.Handler, data)
 
 	tmp := strings.Split(h.Path, "/")
 	for i := 0; i < len(tmp); i++ {
 		data.Breadcrumb.Add(h.Url(strings.Join(tmp[0:i+1], "/")), tmp[i])
 	}
 
-	for _, dirname := range h.Directories {
-		f := &types.File{
-			Url:  h.Url(h.Path, dirname),
-			Name: dirname,
+	for _, f := range h.Files {
+		if f.IsDir {
+			data.Directories = append(data.Directories, f)
+			continue
 		}
-		data.Directories = append(data.Directories, f)
+		if filetype.FileMatch(f, filetype.AudioFile) {
+			/*
+				fd := &types.FileData{
+					File: f,
+					Url:  h.Url(h.Path, filename),
+				}
+			*/
+			data.Files = append(data.Files, f)
+		}
+
 	}
 
-	for _, filename := range filetype.Filter(h.Filenames, filetype.AudioFile) {
-		f := &types.File{
-			// Url:  h.Url(h.Path, filename),
-			Url:  h.Url(h.Path, filename),
-			Name: filename,
-		}
-		data.Files = append(data.Files, f)
-	}
+	log.Tracef("handler path:%s localpath:%s files:%d dirs:%d",
+		data.Path, data.LocalPath, len(data.Files), len(data.Directories))
 
 	err = tmpl.Execute(w, data)
 	if err != nil {

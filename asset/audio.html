@@ -10,12 +10,11 @@
    <script type="text/javascript">
 $(document).ready(function(){
 
-
       var playlist = new Array()
       {{range $i, $f := .Files}}
          var r = {
             title: "{{$f.Name}}",
-            mp3: "{{$f.Url}}",
+            mp3: "{{$f.Name}}",
          }
          playlist.push(r)
       {{end}}
@@ -45,7 +44,7 @@ $(document).ready(function(){
 <div class=page>
 
 {{range $i, $b := .Breadcrumb.Crumbs}}
-<a href="{{$b.Url}}">{{$b.Name}}</a> 
+<a href="{{$b.Name}}">{{$b.Name}}</a> 
 {{end}}
 
 <h2>Audio in {{.Path}}</h2>
@@ -53,13 +52,14 @@ $(document).ready(function(){
 {{if .Directories}}
 <div class=directories>
    {{range $i, $f := .Directories}}
-   <a href="{{$f.Url}}/">{{$f.Basename}}</a> &nbsp;
+   <a href="{{$f.Name}}/">{{$f.Basename}}</a> &nbsp;
    {{end}}
    <p>
 </div>
 {{end}}
 
 
+{{if .Files}}
 <div id="jquery_jplayer_1" class="jp-jplayer"></div>
 <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player">
    <div class="jp-type-playlist">
@@ -102,6 +102,7 @@ $(document).ready(function(){
       </div>
    </div>
 </div>
+{{end}}
 
 
 

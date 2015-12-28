@@ -23,7 +23,7 @@ func init() {
 
 	// Handlers[UnknownFile ] = ...
 	// Handlers[filetype.PictureFile] = func(h *Handler) ContentHandler { return NewPictureHandler(h) }
-	Handlers[filetype.PictureFile] = func(h *Handler) http.Handler { return NewPictureHandler(h) }
+	// Handlers[filetype.PictureFile] = func(h *Handler) http.Handler { return NewPictureHandler(h) }
 	// VideoFile
 	Handlers[filetype.AudioFile] = func(h *Handler) http.Handler { return NewAudioHandler(h) }
 }

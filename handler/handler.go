@@ -23,9 +23,8 @@ type Handler struct {
 	// local path
 	RootPath string
 
-	Path        string
-	Directories []string
-	Filenames   []string
+	Path  string
+	Files []*types.File
 }
 
 func (h *Handler) LocalPath() string {

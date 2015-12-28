@@ -10,16 +10,26 @@ type ListPathRequest struct {
 }
 type ListPathResponse struct {
 	*ListPathRequest
-	Title       string
-	LocalPath   string
-	Files       []*File
-	Directories []*File
+	Title     string
+	LocalPath string
+	Files     []*File
 }
 
 type File struct {
-	Url  string
-	Name string
-	Size int64
+	IsDir bool
+	Name  string
+	Size  int64
+	MTime int64
+}
+
+func (f *File) String() string {
+	return f.Name
+}
+
+// convenience for templating
+type FileData struct {
+	*File
+	Url string
 }
 
 func (f *File) Basename() string {

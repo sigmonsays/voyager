@@ -56,21 +56,18 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		data.Breadcrumb.Add(h.Url(strings.Join(tmp[0:i+1], "/")), tmp[i])
 	}
 
-	for _, dirname := range h.Directories {
-		f := &types.File{
-			Url:  h.Url(h.Path, dirname),
-			Name: dirname,
+	for _, file := range h.Files {
+		if file.IsDir == false {
+			continue
 		}
-		data.Directories = append(data.Directories, f)
+		data.Directories = append(data.Directories, file)
 	}
 
-	for _, filename := range filetype.Filter(h.Filenames, filetype.PictureFile) {
-		f := &types.File{
-			// Url:  h.Url(h.Path, filename),
-			Url:  h.Url(h.Path, filename),
-			Name: filename,
+	for _, file := range filetype.Filter(h.Files, filetype.PictureFile) {
+		if file.IsDir {
+			continue
 		}
-		data.Files = append(data.Files, f)
+		data.Files = append(data.Files, file)
 	}
 
 	err = tmpl.Execute(w, data)

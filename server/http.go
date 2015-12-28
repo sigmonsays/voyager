@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/elazarl/go-bindata-assetfs"
@@ -17,6 +16,7 @@ import (
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/types"
 	"github.com/sigmonsays/voyager/voy"
 )
 
@@ -24,8 +24,9 @@ type Server struct {
 	Addr string
 	Conf *config.ApplicationConfig
 
-	Cache   *cache.FileCache
-	Factory *handler.HandlerFactory
+	Cache      *cache.FileCache
+	Factory    *handler.HandlerFactory
+	PathLoader handler.PathLoader
 
 	srv *http.Server
 }
@@ -66,23 +67,43 @@ func (s *Server) Start() error {
 	return s.srv.ListenAndServe()
 }
 
-func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
+// parse a url path and turn it into a list path request
+func (s *Server) parsePath(path string) (*types.ListPathRequest, error) {
 	tmp := strings.Split(path, "/")
 	username := ""
 	if strings.HasPrefix(tmp[1], "~") {
 		username = tmp[1][1:]
 	}
 	if username == "" {
-		return
+		return nil, fmt.Errorf("empty username")
 	}
-	log.Tracef("user=%s: path %s", username, path)
-	user_ent, err := user.Lookup(username)
+
+	res := &types.ListPathRequest{
+		User: username,
+		Path: "/" + strings.Join(tmp[2:], "/"),
+	}
+
+	log.Tracef("user=%s: path %s return %+v", username, path, res)
+
+	return res, nil
+
+}
+
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	tmp := strings.Split(path, "/")
+
+	req, err := s.parsePath(path)
 	if err != nil {
-		log.Warnf("user lookup %s: %s", username, err)
+		WriteError(w, r, "parse path %s: %s", path, err)
 		return
 	}
 
+	user_ent, err := user.Lookup(req.User)
+	if err != nil {
+		WriteError(w, r, "user lookup %s: %s", req.User, err)
+		return
+	}
 	homedir := user_ent.HomeDir
 
 	voy := voy.DefaultConfig()
@@ -115,7 +136,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Warnf("relpath %s", err)
 		}
-		urlprefix = "/~" + filepath.Join(username, topdir)
+		urlprefix = "/~" + filepath.Join(req.User, topdir)
 
 		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
 	} else {
@@ -131,69 +152,28 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			WriteError(w, r, "nothing to see here. bye bye.")
 			return
 		}
-		urlprefix = "/~" + username
+		urlprefix = "/~" + req.User
 	}
 
 	log.Infof("request user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
-		username, rootpath, relpath, localpath, urlprefix)
+		req.User, rootpath, relpath, localpath, urlprefix)
 
 	// dispatch handler to appropriate handler based on content
 	hndlr := &handler.Handler{
-		Username:  username,
+		Username:  req.User,
 		RootPath:  rootpath,
 		Path:      relpath,
 		UrlPrefix: urlprefix,
 	}
 
-	fh, err := os.Open(localpath)
+	// call the path loader
+	files, err := s.PathLoader.GetFiles(localpath)
 	if err != nil {
-		w.WriteHeader(404)
-		WriteError(w, r, "%s", err)
-		return
-	}
-	defer fh.Close()
-	st, err := fh.Stat()
-	if err != nil {
-		w.WriteHeader(404)
-		WriteError(w, r, "%s", err)
+		WriteError(w, r, "path loader GetFiles: %s", err)
 		return
 	}
 
-	if st.IsDir() == false {
-		// serve the object directly
-		log.Debugf("dispatch ListHandler user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
-			username, rootpath, relpath, localpath, urlprefix)
-
-		http.StripPrefix(urlprefix, http.FileServer(http.Dir(rootpath))).ServeHTTP(w, r)
-
-		// objectHandler := handler.NewListHandler(hndlr)
-		// objectHandler.ServeHTTP(w, r)
-
-		return
-	}
-
-	directories := make([]string, 0)
-	filenames := make([]string, 0)
-
-	files, err := fh.Readdir(-1)
-	if err != nil {
-		WriteError(w, r, "readdir: %s", err)
-		return
-	}
-	for _, file := range files {
-		// should this be an option? skip hidden files..
-		if strings.HasPrefix(file.Name(), ".") {
-			continue
-		}
-		if file.IsDir() {
-			directories = append(directories, file.Name())
-		} else {
-			filenames = append(filenames, file.Name())
-		}
-	}
-	sort.Strings(directories)
-	sort.Strings(filenames)
-
+	// resolve layout
 	var customLayout string
 	ltmp := strings.Split(localpath, "/")
 Layout:
@@ -209,17 +189,16 @@ Layout:
 	}
 
 	if customLayout == "" {
-		hndlr.Layout = filetype.GuessLayout(localpath, filenames)
+		hndlr.Layout = filetype.GuessLayout(localpath, files)
 	} else {
 		hndlr.Layout = filetype.TypeFromString(customLayout)
 		log.Debugf("using custom layout %s (%q) for %s", hndlr.Layout, customLayout, localpath)
 	}
 
-	hndlr.Filenames = filenames
-	hndlr.Directories = directories
+	hndlr.Files = files
 
-	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d dirs:%d",
-		hndlr.Layout, username, rootpath, relpath, localpath, urlprefix, len(filenames), len(directories))
+	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d",
+		hndlr.Layout, req.User, rootpath, relpath, localpath, urlprefix, len(files))
 
 	reqHandler := s.Factory.MakeHandler(hndlr)
 	if reqHandler == nil {

@@ -99,12 +99,14 @@ func main() {
 
 	// core components
 	handlerFactory := handler.NewHandlerFactory()
+	pathLoader := handler.NewFilesystemPathLoader()
 
 	// the HTTP server
 	srv := server.NewServer(cfg.Http.BindAddr)
 	srv.Conf = cfg
 	srv.Cache = cache
 	srv.Factory = handlerFactory
+	srv.PathLoader = pathLoader
 	go func() {
 		err = srv.Start()
 		if err != nil {

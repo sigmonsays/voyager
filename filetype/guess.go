@@ -2,14 +2,19 @@ package filetype
 
 import (
 	"path/filepath"
+
+	"github.com/sigmonsays/voyager/types"
 )
 
-func GuessLayout(localpath string, filenames []string) FileType {
+func GuessLayout(localpath string, files []*types.File) FileType {
 	totals := make(map[FileType]int)
-	for _, filename := range filenames {
-		ftype, err := Determine(filepath.Join(localpath, filename))
+	for _, f := range files {
+		if f.IsDir {
+			continue
+		}
+		ftype, err := Determine(filepath.Join(localpath, f.Name))
 		if err != nil {
-			log.Warnf("determine filetype %s: %s", filename, err)
+			log.Warnf("determine filetype %s: %s", f.Name, err)
 		}
 		if _, ok := totals[ftype]; ok == false {
 			totals[ftype] = 0
