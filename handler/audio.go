@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -49,9 +50,12 @@ func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Breadcrumb:  NewBreadcrumb(),
 	}
 
-	tmp := strings.Split(h.Path, "/")
-	for i := 0; i < len(tmp); i++ {
-		data.Breadcrumb.Add(h.Url(strings.Join(tmp[0:i+1], "/")), tmp[i])
+	tmp := strings.Split(filepath.Join(h.UrlPrefix, h.Path), "/")
+	var crumbUrl string
+	for i := 1; i < len(tmp); i++ {
+		crumbUrl = strings.Join(tmp[0:i+1], "/") + "/"
+		log.Debugf("breadcrumb #%d - %s - %s", i, tmp[i], crumbUrl)
+		data.Breadcrumb.Add(crumbUrl, tmp[i])
 	}
 
 	for _, f := range h.Files {
@@ -60,12 +64,6 @@ func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 		if filetype.FileMatch(f, filetype.AudioFile) {
-			/*
-				fd := &types.FileData{
-					File: f,
-					Url:  h.Url(h.Path, filename),
-				}
-			*/
 			data.Files = append(data.Files, f)
 		}
 

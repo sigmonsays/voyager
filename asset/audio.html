@@ -44,7 +44,7 @@ $(document).ready(function(){
 <div class=page>
 
 {{range $i, $b := .Breadcrumb.Crumbs}}
-<a href="{{$b.Name}}">{{$b.Name}}</a> 
+<a href="{{$b.Url}}">{{$b.Name}}</a> 
 {{end}}
 
 <h2>Audio in {{.Path}}</h2>
