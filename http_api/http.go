@@ -15,8 +15,8 @@ import (
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
-	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/layout"
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/types"
 	"github.com/sigmonsays/voyager/voy"
@@ -30,6 +30,7 @@ type Server struct {
 	Cache      *cache.FileCache
 	Factory    *handler.HandlerFactory
 	PathLoader handler.PathLoader
+	Layout     layout.LayoutResolver
 
 	srv *http.Server
 }
@@ -227,28 +228,13 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		return
 	}
 
-	// resolve layout
-	var customLayout string
-	ltmp := strings.Split(localpath, "/")
-Layout:
-	for i := len(ltmp); i > 1; i-- {
-		p := strings.Join(ltmp[:i], "/")
-		log.Tracef("check custom layout %s", p)
-		l, found := voy.Layouts[p]
-		if found {
-			log.Tracef("found custom layout %s for %s", l, p)
-			customLayout = l
-			break Layout
-		}
+	layout, err := s.Layout.Resolve(voy, localpath, files)
+	if err != nil {
+		WriteError(w, r, "resolve layout %s: %s", localpath, err)
+		return
 	}
 
-	if customLayout == "" {
-		hndlr.Layout = filetype.GuessLayout(localpath, files)
-	} else {
-		hndlr.Layout = filetype.TypeFromString(customLayout)
-		log.Debugf("using custom layout %s (%q) for %s", hndlr.Layout, customLayout, localpath)
-	}
-
+	hndlr.Layout = layout
 	hndlr.Files = files
 
 	log.Debugf("dispatch %s user:%s rootpath:%s path:%s localpath:%s urlprefix:%s files:%d",

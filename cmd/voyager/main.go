@@ -12,6 +12,7 @@ import (
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
 	"github.com/sigmonsays/voyager/http_api"
+	"github.com/sigmonsays/voyager/layout"
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/util"
 	"github.com/sigmonsays/voyager/util/devrestarter"
@@ -103,6 +104,8 @@ func main() {
 	handlerFactory := handler.NewHandlerFactory()
 	pathLoader := handler.NewFilesystemPathLoader()
 
+	layoutResolver := layout.NewLayoutResolver()
+
 	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
 	ctx := context.Background()
 	ctx = metadata.NewContext(ctx, md)
@@ -113,6 +116,7 @@ func main() {
 	srv.Cache = cache
 	srv.Factory = handlerFactory
 	srv.PathLoader = pathLoader
+	srv.Layout = layoutResolver
 	srv.Ctx = ctx
 	go func() {
 		err = srv.Start()
