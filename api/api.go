@@ -5,6 +5,8 @@ import (
 
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/layout"
+	"github.com/sigmonsays/voyager/voy"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
@@ -13,7 +15,10 @@ import (
 type VoyApi struct {
 	Secret string
 
-	Factory *handler.HandlerFactory
+	Factory    *handler.HandlerFactory
+	PathLoader handler.PathLoader
+	Layout     layout.LayoutResolver
+	VoyFile    voy.VoyLoader
 }
 
 func MakeApi(cfg *config.ApplicationConfig) *VoyApi {

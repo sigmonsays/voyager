@@ -139,6 +139,10 @@ func main() {
 	http2_api := api.MakeApi(cfg)
 	http2_api.WithHandlerFactory(handlerFactory)
 
+	http2_api.PathLoader = pathLoader
+	http2_api.Layout = layoutResolver
+	http2_api.VoyFile = voyLoader
+
 	vapi.RegisterVApiServer(http2_serv, http2_api)
 
 	log.Infof("%s", cfg.StartupBanner)
