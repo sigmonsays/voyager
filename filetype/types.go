@@ -40,7 +40,16 @@ var Audio = map[string]bool{
 var FileTypes map[string]FileType
 
 var FileTypeNames map[string]FileType
+var FileTypeIds map[FileType]string
 
+func TypeToString(ftype FileType) string {
+	name, ok := FileTypeIds[ftype]
+	if ok == false {
+		log.Warnf("unknown type %s", name)
+		return "unknown"
+	}
+	return name
+}
 func TypeFromString(name string) FileType {
 	ftype, ok := FileTypeNames[strings.ToLower(name)]
 	if ok == false {
@@ -60,6 +69,7 @@ func merge(src map[string]bool, dst map[string]FileType, filetype FileType) {
 
 func init() {
 	FileTypes = make(map[string]FileType, 0)
+	FileTypeIds = make(map[FileType]string, 0)
 	merge(Picture, FileTypes, PictureFile)
 	merge(Video, FileTypes, VideoFile)
 	merge(Audio, FileTypes, AudioFile)
@@ -69,6 +79,10 @@ func init() {
 		"pictures": PictureFile,
 		"video":    VideoFile,
 		"audio":    AudioFile,
+	}
+
+	for name, ftype := range FileTypeNames {
+		FileTypeIds[ftype] = name
 	}
 }
 
