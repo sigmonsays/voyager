@@ -31,6 +31,7 @@ type Server struct {
 	Factory    *handler.HandlerFactory
 	PathLoader handler.PathLoader
 	Layout     layout.LayoutResolver
+	VoyFile    voy.VoyLoader
 
 	srv *http.Server
 }
@@ -72,7 +73,7 @@ func (s *Server) Start() error {
 }
 
 // parse a url path and turn it into a list path request
-func (s *Server) parsePath(path string) (*types.ListPathRequest, error) {
+func (s *Server) parseRequest(path string) (*types.ListPathRequest, error) {
 	tmp := strings.Split(path, "/")
 
 	identity := ""
@@ -110,7 +111,7 @@ func (s *Server) parsePath(path string) (*types.ListPathRequest, error) {
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 
-	req, err := s.parsePath(path)
+	req, err := s.parseRequest(path)
 	if err != nil {
 		WriteError(w, r, "parse path %s: %s", path, err)
 		return
@@ -153,21 +154,22 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 
 func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types.ListPathRequest) {
 
+	voy, err := s.VoyFile.Load(req)
+	if err != nil {
+		WriteError(w, r, "load voyfile %s: %s", req.User, err)
+		return
+	}
+
+	log.Tracef("voyfile allow:%+v alias:%+v servers:%+v", voy.Allow, voy.Alias, voy.Servers)
+
+	// we still need to lookup the user to get the home directory
+	// because paths that do not start with a / are relative to the home directory
 	user_ent, err := user.Lookup(req.User)
 	if err != nil {
 		WriteError(w, r, "user lookup %s: %s", req.User, err)
 		return
 	}
 	homedir := user_ent.HomeDir
-
-	voy := voy.DefaultConfig()
-	voyfile := filepath.Join(homedir, ".voyager")
-
-	err = voy.LoadYaml(voyfile)
-	if err != nil {
-		WriteError(w, r, "load voyfile %s: %s", voyfile, err)
-		return
-	}
 
 	tmp := strings.Split(req.Path, "/")
 	if len(tmp) < 3 {
@@ -196,7 +198,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		log.Debugf("%s is an alias for %s: new path %s (relpath:%s urlprefix:%s)", topdir, alias, localpath, relpath, urlprefix)
 	} else {
 		rootpath = homedir
-		localpath = filepath.Join(homedir, strings.Join(tmp[2:], "/"))
+		localpath = filepath.Join(homedir, strings.Join(tmp[1:], "/"))
 		relpath, err = filepath.Rel(rootpath, localpath)
 		if err != nil {
 			log.Warnf("relpath rootpath:%s localpath:%s : %s", rootpath, localpath, err)
@@ -208,6 +210,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 			return
 		}
 		urlprefix = "/~" + req.User
+		log.Debugf("%s is regular path (localpath:%s relpath:%s urlprefix:%s)", req.Path, localpath, relpath, urlprefix)
 	}
 
 	log.Infof("request user:%s rootpath:%s path:%s localpath:%s urlprefix:%s",
@@ -228,6 +231,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		return
 	}
 
+	// determine the layout
 	layout, err := s.Layout.Resolve(voy, localpath, files)
 	if err != nil {
 		WriteError(w, r, "resolve layout %s: %s", localpath, err)

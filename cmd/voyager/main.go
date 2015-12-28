@@ -16,6 +16,7 @@ import (
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/util"
 	"github.com/sigmonsays/voyager/util/devrestarter"
+	"github.com/sigmonsays/voyager/voy"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
@@ -106,6 +107,8 @@ func main() {
 
 	layoutResolver := layout.NewLayoutResolver()
 
+	voyLoader := voy.NewVoyLoader()
+
 	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
 	ctx := context.Background()
 	ctx = metadata.NewContext(ctx, md)
@@ -117,6 +120,7 @@ func main() {
 	srv.Factory = handlerFactory
 	srv.PathLoader = pathLoader
 	srv.Layout = layoutResolver
+	srv.VoyFile = voyLoader
 	srv.Ctx = ctx
 	go func() {
 		err = srv.Start()
