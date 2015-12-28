@@ -41,5 +41,15 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 	log.Tracef("files:%d", len(files))
 
 	res := &vapi.ListResponse{}
+
+	for _, file := range files {
+		f := &vapi.File{
+			Name: file.Name,
+			Size: file.Size,
+		}
+		res.Files = append(res.Files, f)
+	}
+
+	log.Tracef("response %s", res)
 	return res, nil
 }
