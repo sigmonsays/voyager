@@ -2,6 +2,7 @@ package handler
 
 import (
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/sigmonsays/voyager/types"
@@ -84,6 +85,11 @@ func (me *FilesystemPathLoader) GetFiles(localpath string) ([]*types.File, error
 		}
 		fl = append(fl, f)
 	}
+
+	sorter := types.SortByName{
+		Files: fl,
+	}
+	sort.Sort(sorter)
 
 	log.Debugf("loaded files from %s files:%d dirs:%d", localpath, filecnt, dircnt)
 
