@@ -24,6 +24,7 @@ func NewPictureHandler(handler *Handler) *PictureHandler {
 type Gallery struct {
 	Path        string
 	LocalPath   string
+	UrlPrefix   string
 	Title       string
 	Files       []*types.File
 	Directories []*types.File
@@ -46,6 +47,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Files:      make([]*types.File, 0),
 		Path:       h.Path,
 		LocalPath:  h.LocalPath(),
+		UrlPrefix:  h.UrlPrefix,
 		Breadcrumb: NewBreadcrumb(),
 	}
 

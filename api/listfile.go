@@ -50,7 +50,8 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 	}
 
 	urlp := &url.URL{}
-	urlp.Host = api.ServerName
+	urlp.Scheme = "http"
+	urlp.Host = api.ServerName + ":8183"
 	urlp.Path = paths.UrlPrefix
 
 	res := &vapi.ListResponse{
