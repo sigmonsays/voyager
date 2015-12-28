@@ -1,13 +1,14 @@
 # voyager
 
-the main purpose of voyager is to provide a context aware file browser in a web page. 
+the main purpose of voyager is to provide a context aware file browser in a web page.  voyager 
+is a http server which can render file listings using the appropriate layout based on the 
+types of files found.
 
-voyager is a http server which can render file listings using the appropriate layout based
-on the types of files found.
+A remote API is currently in development to allow connecting to remote servers.
 
 # features
 - context aware layout (photos, video, audio, etc)
-- image resize for thumbnails
+- image resize for thumbnails with a local cache
 
 
 # install
