@@ -16,7 +16,9 @@ import (
 	"github.com/sigmonsays/voyager/util"
 	"github.com/sigmonsays/voyager/util/devrestarter"
 
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	reload_git "github.com/sigmonsays/git-watch/reload/git"
 	gologging "github.com/sigmonsays/go-logging"
@@ -101,12 +103,17 @@ func main() {
 	handlerFactory := handler.NewHandlerFactory()
 	pathLoader := handler.NewFilesystemPathLoader()
 
+	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
+	ctx := context.Background()
+	ctx = metadata.NewContext(ctx, md)
+
 	// the HTTP server
 	srv := server.NewServer(cfg.Http.BindAddr)
 	srv.Conf = cfg
 	srv.Cache = cache
 	srv.Factory = handlerFactory
 	srv.PathLoader = pathLoader
+	srv.Ctx = ctx
 	go func() {
 		err = srv.Start()
 		if err != nil {

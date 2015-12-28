@@ -10,12 +10,14 @@ import (
 
 	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/sigmonsays/go-apachelog"
+	"golang.org/x/net/context"
 
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/types"
 	"github.com/sigmonsays/voyager/voy"
 )
@@ -24,6 +26,7 @@ type Server struct {
 	Addr string
 	Conf *config.ApplicationConfig
 
+	Ctx        context.Context
 	Cache      *cache.FileCache
 	Factory    *handler.HandlerFactory
 	PathLoader handler.PathLoader
@@ -70,17 +73,31 @@ func (s *Server) Start() error {
 // parse a url path and turn it into a list path request
 func (s *Server) parsePath(path string) (*types.ListPathRequest, error) {
 	tmp := strings.Split(path, "/")
-	username := ""
+
+	identity := ""
 	if strings.HasPrefix(tmp[1], "~") {
-		username = tmp[1][1:]
+		identity = tmp[1][1:]
 	}
-	if username == "" {
-		return nil, fmt.Errorf("empty username")
+	if identity == "" {
+		return nil, fmt.Errorf("empty identity")
+	}
+
+	var username string
+	var server string
+
+	idx := strings.Index(identity, "@")
+	if idx >= 0 {
+		username = identity[:idx]
+		server = identity[idx+1:]
+		server = vapi.HostDefaultPort(server, vapi.DefaultPortString)
+	} else {
+		username = identity
 	}
 
 	res := &types.ListPathRequest{
-		User: username,
-		Path: "/" + strings.Join(tmp[2:], "/"),
+		Server: server,
+		User:   username,
+		Path:   "/" + strings.Join(tmp[2:], "/"),
 	}
 
 	log.Tracef("user=%s: path %s return %+v", username, path, res)
@@ -91,13 +108,49 @@ func (s *Server) parsePath(path string) (*types.ListPathRequest, error) {
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
-	tmp := strings.Split(path, "/")
 
 	req, err := s.parsePath(path)
 	if err != nil {
 		WriteError(w, r, "parse path %s: %s", path, err)
 		return
 	}
+
+	if req.Server == "" {
+		s.LocalRequest(w, r, req)
+	} else {
+		s.RemoteRequest(w, r, req)
+	}
+
+}
+
+func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *types.ListPathRequest) {
+
+	// dispatch handler to appropriate handler based on content
+
+	log.Tracef("remote request server:%s", req.Server)
+
+	dopts := vapi.DefaultDialOptions()
+
+	c, err := vapi.Connect(req.Server, dopts)
+	if err != nil {
+		WriteError(w, r, "remote:%s connect %s: %s", req.Server, req.Path, err)
+		return
+	}
+
+	list_req := &vapi.ListRequest{
+		User: req.User,
+		Path: req.Path,
+	}
+
+	res, err := c.Client.ListFiles(s.Ctx, list_req)
+	if err != nil {
+		WriteError(w, r, "remote:%s list files %s: %s", req.Server, req.Path, err)
+		return
+	}
+	log.Debugf("response %+v", res)
+}
+
+func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types.ListPathRequest) {
 
 	user_ent, err := user.Lookup(req.User)
 	if err != nil {
@@ -115,6 +168,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tmp := strings.Split(req.Path, "/")
 	if len(tmp) < 3 {
 		// TODO: Do we want to support any kind of top level index?
 		WriteError(w, r, "incomplete path")

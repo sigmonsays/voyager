@@ -8,6 +8,8 @@ import (
 
 func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.ListResponse, error) {
 
+	log.Tracef("listfiles %#v", in)
+
 	err := api.Authenticate(ctx)
 	if err != nil {
 		return nil, err

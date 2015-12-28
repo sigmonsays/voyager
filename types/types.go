@@ -5,8 +5,9 @@ import (
 )
 
 type ListPathRequest struct {
-	User string
-	Path string
+	Server string
+	User   string
+	Path   string
 }
 type ListPathResponse struct {
 	*ListPathRequest
