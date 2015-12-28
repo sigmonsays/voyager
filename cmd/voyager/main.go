@@ -11,8 +11,8 @@ import (
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/http_api"
 	"github.com/sigmonsays/voyager/proto/vapi"
-	"github.com/sigmonsays/voyager/server"
 	"github.com/sigmonsays/voyager/util"
 	"github.com/sigmonsays/voyager/util/devrestarter"
 
@@ -108,7 +108,7 @@ func main() {
 	ctx = metadata.NewContext(ctx, md)
 
 	// the HTTP server
-	srv := server.NewServer(cfg.Http.BindAddr)
+	srv := http_api.NewServer(cfg.Http.BindAddr)
 	srv.Conf = cfg
 	srv.Cache = cache
 	srv.Factory = handlerFactory
