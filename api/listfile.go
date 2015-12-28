@@ -1,6 +1,9 @@
 package api
 
 import (
+	"fmt"
+	"net/url"
+
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/types"
 
@@ -40,7 +43,20 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 
 	log.Tracef("files:%d", len(files))
 
-	res := &vapi.ListResponse{}
+	// determine the layout
+	layout, err := api.Layout.Resolve(voy, paths.LocalPath, files)
+	if err != nil {
+		return nil, err
+	}
+
+	urlp := &url.URL{}
+	urlp.Host = api.ServerName
+	urlp.Path = paths.UrlPrefix
+
+	res := &vapi.ListResponse{
+		Layout:    fmt.Sprintf("%s", layout),
+		UrlPrefix: urlp.String(),
+	}
 
 	for _, file := range files {
 		f := &vapi.File{

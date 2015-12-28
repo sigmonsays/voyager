@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
@@ -13,7 +14,8 @@ import (
 )
 
 type VoyApi struct {
-	Secret string
+	Secret     string
+	ServerName string
 
 	Factory    *handler.HandlerFactory
 	PathLoader handler.PathLoader
@@ -26,6 +28,13 @@ func MakeApi(cfg *config.ApplicationConfig) *VoyApi {
 	v := &VoyApi{
 		Secret: cfg.Rpc.Secret,
 	}
+
+	var err error
+	v.ServerName, err = os.Hostname()
+	if err != nil {
+		log.Warnf("Hostname: %s", err)
+	}
+
 	return v
 }
 

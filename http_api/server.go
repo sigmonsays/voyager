@@ -13,6 +13,7 @@ import (
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
+	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
 	"github.com/sigmonsays/voyager/layout"
 	"github.com/sigmonsays/voyager/proto/vapi"
@@ -148,6 +149,38 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 		return
 	}
 	log.Debugf("response %+v", res)
+
+	hndlr := &handler.Handler{
+		Username:  req.User,
+		UrlPrefix: res.UrlPrefix,
+		/*
+			RootPath:  paths.RootPath,
+			Path:      paths.RelPath,
+			UrlPrefix: paths.UrlPrefix,
+		*/
+	}
+
+	hndlr.Layout = filetype.TypeFromString(res.Layout)
+	files := make([]*types.File, 0)
+	for _, file := range res.Files {
+		f := &types.File{
+			Name: file.Name,
+			Size: file.Size,
+		}
+		files = append(files, f)
+	}
+	hndlr.Files = files
+
+	log.Debugf("dispatch %s user:%s files:%d",
+		hndlr.Layout, req.User, len(files))
+
+	reqHandler := s.Factory.MakeHandler(hndlr)
+	if reqHandler == nil {
+		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+	} else {
+		reqHandler.ServeHTTP(w, r)
+	}
+
 }
 
 func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types.ListPathRequest) {

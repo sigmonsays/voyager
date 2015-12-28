@@ -31,6 +31,7 @@ message ListRequest {
 };
 message ListResponse {
    ListRequest request = 1;
-   string LocalPath = 2;
-   repeated File Files = 3;
+   string layout = 2;
+   string url_prefix = 3;
+   repeated File Files = 4;
 };
