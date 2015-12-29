@@ -12,6 +12,7 @@ type ApplicationConfig struct {
 	LogLevel      string
 	LogLevels     map[string]string
 	Hostname      string
+	ServerName    string
 	StartupBanner string
 
 	AutoUpgrade bool
@@ -85,6 +86,7 @@ func GetDefaultConfig() *ApplicationConfig {
 
 	return &ApplicationConfig{
 		Hostname:      hostname,
+		ServerName:    fmt.Sprintf("%s:%d", hostname, 8181),
 		StartupBanner: "Ready",
 		AutoUpgrade:   true,
 		AutoRestart:   true,

@@ -142,6 +142,7 @@ func main() {
 	http2_api.PathLoader = pathLoader
 	http2_api.Layout = layoutResolver
 	http2_api.VoyFile = voyLoader
+	http2_api.ServerName = cfg.ServerName
 
 	vapi.RegisterVApiServer(http2_serv, http2_api)
 
