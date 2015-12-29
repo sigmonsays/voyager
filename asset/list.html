@@ -35,11 +35,14 @@ prefix         {{$prefix}}
 {{end}}
 
 <div class=container>
+   <table width="100%" border=0>
+
    {{range $i, $f := .Files}}
-   <div >
-      <a href="{{$prefix}}/{{$f.Name}}"></a>
-   </div>
+   <tr >
+      <td><a href="{{$prefix}}/{{$f.Name}}"></a></td>
+   </tr>
    {{end}}
+   </table>
 </div>
 
 
