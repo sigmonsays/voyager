@@ -155,11 +155,7 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 		UrlPrefix:    res.UrlPrefix,
 		RemoteServer: res.RemoteServer,
 		RelPath:      res.RelPath,
-		/*
-			RootPath:  paths.RootPath,
-			Path:      paths.RelPath,
-			UrlPrefix: paths.UrlPrefix,
-		*/
+		LocalPath:    res.LocalPath,
 	}
 
 	hndlr.Layout = filetype.TypeFromString(res.Layout)

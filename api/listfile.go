@@ -61,7 +61,7 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 		UrlPrefix:    urlp.String(),
 		RelPath:      paths.RelPath,
 		LocalPath:    paths.LocalPath,
-		RemoteServer: api.ServerName,
+		RemoteServer: "http://" + api.ServerName,
 	}
 
 	for _, file := range files {
