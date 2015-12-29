@@ -63,17 +63,13 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, file := range h.Files {
-		if file.IsDir == false {
-			continue
-		}
-		data.Directories = append(data.Directories, file)
-	}
-
-	for _, file := range filetype.Filter(h.Files, filetype.PictureFile) {
 		if file.IsDir {
+			data.Directories = append(data.Directories, file)
 			continue
 		}
-		data.Files = append(data.Files, file)
+		if filetype.FileMatch(file, filetype.PictureFile) {
+			data.Files = append(data.Files, file)
+		}
 	}
 
 	err = tmpl.Execute(w, data)
