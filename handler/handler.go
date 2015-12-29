@@ -26,6 +26,9 @@ type Handler struct {
 	// local "root" path
 	RootPath string
 
+	// the local on disk path
+	LocalPath string
+
 	// the requested path
 	Path string
 
@@ -36,9 +39,6 @@ type Handler struct {
 	Files []*types.File
 }
 
-func (h *Handler) LocalPath() string {
-	return filepath.Join(h.RootPath, h.Path)
-}
 func (h *Handler) Url(paths ...string) string {
 	return filepath.Join(h.UrlPrefix, filepath.Join(paths...))
 }

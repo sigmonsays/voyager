@@ -34,7 +34,7 @@ type Gallery struct {
 }
 
 func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath())
+	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
 	tmplData, err := asset.Asset("picture.html")
 	if err != nil {
@@ -48,7 +48,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Title:        "Pictures",
 		Files:        make([]*types.File, 0),
 		Path:         h.Path,
-		LocalPath:    h.LocalPath(),
+		LocalPath:    h.LocalPath,
 		UrlPrefix:    h.UrlPrefix,
 		RelPath:      h.RelPath,
 		RemoteServer: h.RemoteServer,

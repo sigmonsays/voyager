@@ -208,6 +208,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		Path:      paths.RelPath,
 		RelPath:   paths.RelPath,
 		UrlPrefix: paths.UrlPrefix,
+		LocalPath: paths.LocalPath,
 	}
 
 	// call the path loader

@@ -31,7 +31,7 @@ type Playlist struct {
 }
 
 func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath())
+	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
 	tmplData, err := asset.Asset("audio.html")
 	if err != nil {
@@ -46,7 +46,7 @@ func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Files:       make([]*types.File, 0),
 		Directories: make([]*types.File, 0),
 		Path:        h.Path,
-		LocalPath:   h.LocalPath(),
+		LocalPath:   h.LocalPath,
 		Breadcrumb:  NewBreadcrumb(),
 	}
 

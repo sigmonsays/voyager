@@ -35,5 +35,6 @@ message ListResponse {
    string url_prefix = 3;
    string remote_server = 4;
    string rel_path = 5;
-   repeated File Files = 6;
+   string local_path = 6;
+   repeated File Files = 7;
 };
