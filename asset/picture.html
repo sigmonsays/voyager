@@ -12,10 +12,17 @@
 
 <h2>Pictures in {{.Path}}</h2>
 
-<--
-<li>Path {{.Path}}</li>
-<li>UrlPrefix {{.UrlPrefix}}</li>
+{{ $prefix := printf "%s/%s" .UrlPrefix  .RelPath }}
+
+<!--
+Path           {{.Path}}
+UrlPrefix      {{.UrlPrefix}}
+RelPath        {{.RelPath}}
+RemoteServer   {{.RemoteServer}}
+
+prefix         {{$prefix}}
 -->
+
 
 {{if .Directories}}
 <div class=directories>
@@ -29,7 +36,7 @@
 <div class=container>
    {{range $i, $f := .Files}}
    <div class=thumbnail>
-      <a href="http://{{$.RemoteServer}}/{{$f.Name}}"><img src="http://{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+      <a href="{{$prefix}}/{{$f.Name}}"><img src="http://{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
    </div>
    {{end}}
 </div>

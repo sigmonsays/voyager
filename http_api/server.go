@@ -206,6 +206,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		Username:  req.User,
 		RootPath:  paths.RootPath,
 		Path:      paths.RelPath,
+		RelPath:   paths.RelPath,
 		UrlPrefix: paths.UrlPrefix,
 	}
 

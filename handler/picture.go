@@ -45,13 +45,14 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
 
 	data := &Gallery{
-		Title:      "Pictures",
-		Files:      make([]*types.File, 0),
-		Path:       h.Path,
-		LocalPath:  h.LocalPath(),
-		UrlPrefix:  h.UrlPrefix,
-		RelPath:    h.RelPath,
-		Breadcrumb: NewBreadcrumb(),
+		Title:        "Pictures",
+		Files:        make([]*types.File, 0),
+		Path:         h.Path,
+		LocalPath:    h.LocalPath(),
+		UrlPrefix:    h.UrlPrefix,
+		RelPath:      h.RelPath,
+		RemoteServer: h.RemoteServer,
+		Breadcrumb:   NewBreadcrumb(),
 	}
 
 	log.Tracef("handler %#v data %+v", h.Handler, data)
