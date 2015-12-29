@@ -26,16 +26,17 @@ prefix         {{$prefix}}
 
 
 {{if .Directories}}
-<div class=directories>
-   {{range $i, $f := .Directories}}
-   <a href="{{$f.Name}}/">{{$f.Basename}}</a> &nbsp;
-   {{end}}
-   <p>
-</div>
 {{end}}
 
 <div class=container>
    <table width="100%" border=0>
+   {{range $i, $f := .Directories}}
+   <tr >
+      <td><a href="{{$f.Name}}/">{{$f.Basename}}</a></td>
+      <td>&nbsp;</td>
+   </tr>
+   {{end}}
+   <p>
 
    {{range $i, $f := .Files}}
    <tr >
