@@ -55,7 +55,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Breadcrumb:   NewBreadcrumb(),
 	}
 
-	log.Tracef("handler %#v data %+v", h.Handler, data)
+	log.Tracef("handler %s", h.Handler.Path)
 
 	tmp := strings.Split(h.Path, "/")
 	for i := 0; i < len(tmp); i++ {
