@@ -66,8 +66,10 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 
 	for _, file := range files {
 		f := &vapi.File{
-			Name: file.Name,
-			Size: file.Size,
+			IsDir: file.IsDir,
+			Name:  file.Name,
+			Size:  file.Size,
+			Mtime: file.MTime,
 		}
 		res.Files = append(res.Files, f)
 	}
