@@ -220,7 +220,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		return
 	}
 
-	log.Tracef("voyfile allow:%+v alias:%+v servers:%+v", voy.Allow, voy.Alias, voy.Servers)
+	log.Tracef("voyfile allow:%+v alias:%+v servers:%+v - paths %s", voy.Allow, voy.Alias, voy.Servers, paths)
 
 	// dispatch handler to appropriate handler based on content
 	hndlr := &handler.Handler{
