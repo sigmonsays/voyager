@@ -59,8 +59,10 @@ func (l *fileLoader) ResolvePath(voy *VoyFile, req *types.ListPathRequest) (*typ
 	var relpath string
 	var urlprefix string
 
-	topdir := tmp[2]
+	topdir := tmp[1]
 	alias, is_alias := voy.Alias[topdir]
+
+	log.Tracef("topdir:%s alias:%s is_alias:%v", topdir, alias, is_alias)
 
 	if is_alias {
 		localpath = filepath.Join(alias, strings.Join(tmp[3:], "/"))
