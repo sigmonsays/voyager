@@ -154,6 +154,7 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 		Username:     req.User,
 		UrlPrefix:    res.UrlPrefix,
 		RemoteServer: res.RemoteServer,
+		RelPath:      res.RelPath,
 		/*
 			RootPath:  paths.RootPath,
 			Path:      paths.RelPath,

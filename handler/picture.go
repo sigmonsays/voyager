@@ -25,6 +25,7 @@ type Gallery struct {
 	Path         string
 	LocalPath    string
 	UrlPrefix    string
+	RelPath      string
 	RemoteServer string
 	Title        string
 	Files        []*types.File
@@ -44,13 +45,13 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
 
 	data := &Gallery{
-		Title:        "Pictures",
-		Files:        make([]*types.File, 0),
-		Path:         h.Path,
-		LocalPath:    h.LocalPath(),
-		UrlPrefix:    h.UrlPrefix,
-		RemoteServer: h.RemoteServer,
-		Breadcrumb:   NewBreadcrumb(),
+		Title:      "Pictures",
+		Files:      make([]*types.File, 0),
+		Path:       h.Path,
+		LocalPath:  h.LocalPath(),
+		UrlPrefix:  h.UrlPrefix,
+		RelPath:    h.RelPath,
+		Breadcrumb: NewBreadcrumb(),
 	}
 
 	log.Tracef("handler %#v data %+v", h.Handler, data)

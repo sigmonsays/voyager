@@ -29,6 +29,9 @@ type Handler struct {
 	// the requested path
 	Path string
 
+	// the relative path
+	RelPath string
+
 	// list of files
 	Files []*types.File
 }
