@@ -52,9 +52,9 @@ func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	for _, file := range h.Files {
 		if file.IsDir {
 			data.Directories = append(data.Directories, file)
-			continue
+		} else {
+			data.Files = append(data.Files, file)
 		}
-		data.Files = append(data.Files, file)
 	}
 
 	err = tmpl.Execute(w, data)
