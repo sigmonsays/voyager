@@ -22,7 +22,7 @@ $(document).ready(function(){
          playlist.push(r)
       {{end}}
 
-      new jPlayerPlaylist({
+   var jplayer = new jPlayerPlaylist({
             jPlayer: "#jquery_jplayer_1",
             cssSelectorAncestor: "#jp_container_1"
          }, playlist, {
@@ -33,6 +33,9 @@ $(document).ready(function(){
       smoothPlayBar: true,
       keyEnabled: true
    });
+   jplayer.option("addTime", 0)
+   jplayer.option("displayTime", 0)
+   jplayer.option("removeTime", 0)
 
 
 
