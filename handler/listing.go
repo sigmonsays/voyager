@@ -3,9 +3,13 @@ package handler
 import (
 	"net/http"
 	"strings"
+	"text/template"
+
+	"github.com/sigmonsays/voyager/asset"
+	"github.com/sigmonsays/voyager/types"
 )
 
-// provides most basic file listing when no other handler has been detected
+// provides listing Lists and auto thumbnailing
 type ListHandler struct {
 	*Handler
 }
@@ -15,15 +19,48 @@ func NewListHandler(handler *Handler) *ListHandler {
 		Handler: handler,
 	}
 }
+
 func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
-	tmp := strings.Split(r.URL.Path, "/")
-	strip_prefix := "/" + tmp[1]
+	tmplData, err := asset.Asset("list.html")
+	if err != nil {
+		WriteError(w, r, "template: %s", err)
+		return
+	}
 
-	log.Debugf("serve path:%s (stripPrefix:%s relpath:%s urlPrefix:%s localPath:%s rootPath:%s)",
-		r.URL.Path, strip_prefix, h.RelPath, h.UrlPrefix, h.LocalPath, h.RootPath)
+	tmpl := template.Must(template.New("list.html").Parse(string(tmplData)))
 
-	handler := http.StripPrefix(strip_prefix, http.FileServer(http.Dir(h.LocalPath)))
+	data := &Gallery{
+		Title:        "Lists",
+		Files:        make([]*types.File, 0),
+		Path:         h.Path,
+		LocalPath:    h.LocalPath,
+		UrlPrefix:    h.UrlPrefix,
+		RelPath:      h.RelPath,
+		RemoteServer: h.RemoteServer,
+		Breadcrumb:   NewBreadcrumb(),
+	}
 
-	handler.ServeHTTP(w, r)
+	log.Tracef("handler %s", h.Handler.Path)
+
+	tmp := strings.Split(h.Path, "/")
+	for i := 0; i < len(tmp); i++ {
+		data.Breadcrumb.Add(h.Url(strings.Join(tmp[0:i+1], "/")), tmp[i])
+	}
+
+	for _, file := range h.Files {
+		if file.IsDir {
+			data.Directories = append(data.Directories, file)
+			continue
+		}
+		data.Files = append(data.Files, file)
+	}
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		WriteError(w, r, "template render: %s", err)
+		return
+	}
+
 }

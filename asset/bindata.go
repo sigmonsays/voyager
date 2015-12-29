@@ -4,6 +4,7 @@
 // audio.html
 // favicon.ico
 // jquery-1.11.3.min.js
+// list.html
 // picture.html
 // style.css
 // video.html
@@ -110,6 +111,24 @@ func faviconIco() (*asset, error) {
 func jquery1113MinJs() (*asset, error) {
 	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jquery-1.11.3.min.js"
 	name := "jquery-1.11.3.min.js"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// listHtml reads file data from disk. It returns an error on failure.
+func listHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/list.html"
+	name := "list.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -576,6 +595,7 @@ var _bindata = map[string]func() (*asset, error){
 	"audio.html": audioHtml,
 	"favicon.ico": faviconIco,
 	"jquery-1.11.3.min.js": jquery1113MinJs,
+	"list.html": listHtml,
 	"picture.html": pictureHtml,
 	"style.css": styleCss,
 	"video.html": videoHtml,
@@ -681,6 +701,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 		}},
 	}},
 	"jquery-1.11.3.min.js": &bintree{jquery1113MinJs, map[string]*bintree{}},
+	"list.html": &bintree{listHtml, map[string]*bintree{}},
 	"picture.html": &bintree{pictureHtml, map[string]*bintree{}},
 	"style.css": &bintree{styleCss, map[string]*bintree{}},
 	"video.html": &bintree{videoHtml, map[string]*bintree{}},

@@ -1,0 +1,48 @@
+<html>
+<head>
+   <title>Files in {{.RelPath}}</title>
+   <link href="/s/style.css" media="all" rel="stylesheet" />
+</head>
+<body>
+<div class=page>
+
+{{range $i, $b := .Breadcrumb.Crumbs}}
+<a href="{{$b.Url}}/">{{$b.Name}}</a> 
+{{end}}
+
+<h2>Files in {{.RelPath}}</h2>
+
+{{ $prefix := printf "%s/%s" .UrlPrefix  .RelPath }}
+
+<!--
+Path           {{.Path}}
+UrlPrefix      {{.UrlPrefix}}
+RelPath        {{.RelPath}}
+LocalPath      {{.LocalPath}}
+RemoteServer   {{.RemoteServer}}
+
+prefix         {{$prefix}}
+-->
+
+
+{{if .Directories}}
+<div class=directories>
+   {{range $i, $f := .Directories}}
+   <a href="{{$f.Name}}/">{{$f.Basename}}</a> &nbsp;
+   {{end}}
+   <p>
+</div>
+{{end}}
+
+<div class=container>
+   {{range $i, $f := .Files}}
+   <div >
+      <a href="{{$prefix}}/{{$f.Name}}"></a>
+   </div>
+   {{end}}
+</div>
+
+
+</div>
+</body>
+</html>
