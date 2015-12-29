@@ -10,30 +10,30 @@ import (
 	"github.com/sigmonsays/voyager/types"
 )
 
-// provides listing pictures and auto thumbnailing
-type PictureHandler struct {
+// provides listing Videos and auto thumbnailing
+type VideoHandler struct {
 	*Handler
 }
 
-func NewPictureHandler(handler *Handler) *PictureHandler {
-	return &PictureHandler{
+func NewVideoHandler(handler *Handler) *VideoHandler {
+	return &VideoHandler{
 		Handler: handler,
 	}
 }
 
-func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h *VideoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
-	tmplData, err := asset.Asset("picture.html")
+	tmplData, err := asset.Asset("video.html")
 	if err != nil {
 		WriteError(w, r, "template: %s", err)
 		return
 	}
 
-	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
+	tmpl := template.Must(template.New("Videos.html").Parse(string(tmplData)))
 
 	data := &Gallery{
-		Title:        "Pictures",
+		Title:        "Videos",
 		Files:        make([]*types.File, 0),
 		Path:         h.Path,
 		LocalPath:    h.LocalPath,
@@ -55,7 +55,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			data.Directories = append(data.Directories, file)
 			continue
 		}
-		if filetype.FileMatch(file, filetype.PictureFile) {
+		if filetype.FileMatch(file, filetype.VideoFile) {
 			data.Files = append(data.Files, file)
 		}
 	}

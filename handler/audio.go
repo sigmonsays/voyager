@@ -21,15 +21,6 @@ func NewAudioHandler(handler *Handler) *AudioHandler {
 	}
 }
 
-type Playlist struct {
-	Path        string
-	LocalPath   string
-	Title       string
-	Files       []*types.File
-	Directories []*types.File
-	Breadcrumb  *Breadcrumb
-}
-
 func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
@@ -41,7 +32,7 @@ func (h *AudioHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	tmpl := template.Must(template.New("audio.html").Parse(string(tmplData)))
 
-	data := &Playlist{
+	data := &Gallery{
 		Title:       "Audio",
 		Files:       make([]*types.File, 0),
 		Directories: make([]*types.File, 0),

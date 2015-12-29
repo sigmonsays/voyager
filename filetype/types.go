@@ -25,9 +25,17 @@ var Picture = map[string]bool{
 }
 
 var Video = map[string]bool{
-	"avi": true,
-	"mp4": true,
-	"m4v": true,
+	"asf":  true,
+	"avi":  true,
+	"flv":  true,
+	"m4v":  true,
+	"mkv":  true,
+	"mov":  true,
+	"mp4":  true,
+	"mpg":  true,
+	"vob":  true,
+	"webm": true,
+	"wmv":  true,
 }
 
 var Audio = map[string]bool{

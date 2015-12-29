@@ -52,6 +52,7 @@ func NewServer(addr string) *Server {
 	mux.Handle("/", s)
 
 	mux.HandleFunc("/image/", s.ImageHandler)
+	mux.HandleFunc("/video/", s.VideoHandler)
 	mux.HandleFunc("/c/", s.CacheHandler)
 
 	static := http.FileServer(
@@ -107,6 +108,9 @@ func (s *Server) parseRequest(path string) (*types.ListPathRequest, error) {
 
 	return res, nil
 
+}
+func (me *Server) WriteError(w http.ResponseWriter, r *http.Request, s string, args ...interface{}) {
+	WriteError(w, r, s, args...)
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

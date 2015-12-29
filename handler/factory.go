@@ -27,6 +27,7 @@ func init() {
 	Handlers[filetype.PictureFile] = func(h *Handler) http.Handler { return NewPictureHandler(h) }
 	// VideoFile
 	Handlers[filetype.AudioFile] = func(h *Handler) http.Handler { return NewAudioHandler(h) }
+	Handlers[filetype.VideoFile] = func(h *Handler) http.Handler { return NewVideoHandler(h) }
 }
 
 func (h *HandlerFactory) MakeHandler(handler *Handler) http.Handler {
