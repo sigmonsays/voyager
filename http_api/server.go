@@ -2,6 +2,7 @@ package http_api
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"strings"
@@ -115,10 +116,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		WriteError(w, r, "parse path %s: %s", path, err)
 		return
 	}
+	voy, err := s.VoyFile.Load(req)
+	if err != nil {
+		WriteError(w, r, "load voyfile %s: %s", path, err)
+		return
+	}
 
 	if req.Server == "" {
 		s.LocalRequest(w, r, req)
 	} else {
+
+		// handle server aliases
+		server_host, server_port, err := net.SplitHostPort(req.Server)
+		if err != nil {
+			server_host = req.Server
+		}
+
+		if server_alias, ok := voy.Servers[server_host]; ok {
+			log.Debugf("server %s is a alias for %s", server_host, server_alias)
+			req.Server = fmt.Sprintf("%s:%s", server_alias, server_port)
+		}
+
 		s.RemoteRequest(w, r, req)
 	}
 
