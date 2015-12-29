@@ -18,6 +18,7 @@
 Path           {{.Path}}
 UrlPrefix      {{.UrlPrefix}}
 RelPath        {{.RelPath}}
+LocalPath      {{.LocalPath}}
 RemoteServer   {{.RemoteServer}}
 
 prefix         {{$prefix}}
@@ -36,7 +37,7 @@ prefix         {{$prefix}}
 <div class=container>
    {{range $i, $f := .Files}}
    <div class=thumbnail>
-      <a href="{{$prefix}}/{{$f.Name}}"><img src="http://{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+      <a href="{{$prefix}}/{{$f.Name}}"><img src="{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
    </div>
    {{end}}
 </div>
