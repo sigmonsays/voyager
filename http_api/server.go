@@ -147,13 +147,13 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 
 	// dispatch handler to appropriate handler based on content
 
-	log.Tracef("remote request server:%s", req.Server)
+	log.Tracef("remote request %s", req)
 
 	dopts := vapi.DefaultDialOptions()
 
-	c, err := vapi.Connect(req.Server, dopts)
+	c, err := vapi.Connect(req.ServerName, dopts)
 	if err != nil {
-		WriteError(w, r, "remote:%s connect %s: %s", req.Server, req.Path, err)
+		WriteError(w, r, "remote:%s connect %s: %s", req.ServerName, req.Path, err)
 		return
 	}
 
@@ -164,10 +164,11 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 
 	res, err := c.Client.ListFiles(s.Ctx, list_req)
 	if err != nil {
-		WriteError(w, r, "remote:%s list files %s: %s", req.Server, req.Path, err)
+		WriteError(w, r, "remote:%s list files %s: %s", req.ServerName, req.Path, err)
 		return
 	}
-	log.Debugf("response %+v", res)
+	log.Tracef("response layout:%s files:%d",
+		res.Layout, len(res.Files))
 
 	hndlr := &handler.Handler{
 		Username:     req.User,
