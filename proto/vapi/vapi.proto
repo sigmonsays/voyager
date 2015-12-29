@@ -13,6 +13,7 @@ service VApi {
 message File {
    string name = 1;
    int64 size = 2;
+   bool is_dir = 3;
 }
 
 // RPC Ping

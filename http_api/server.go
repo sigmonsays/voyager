@@ -182,8 +182,9 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 	files := make([]*types.File, 0)
 	for _, file := range res.Files {
 		f := &types.File{
-			Name: file.Name,
-			Size: file.Size,
+			IsDir: file.IsDir,
+			Name:  file.Name,
+			Size:  file.Size,
 		}
 		files = append(files, f)
 	}
