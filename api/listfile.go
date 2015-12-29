@@ -74,6 +74,7 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 		res.Files = append(res.Files, f)
 	}
 
-	log.Tracef("response %s", res)
+	log.Tracef("response layout:%s urlprefix:%s localpath:%s remoteserver:%s files:%d",
+		res.Layout, res.UrlPrefix, res.LocalPath, res.RemoteServer, len(res.Files))
 	return res, nil
 }
