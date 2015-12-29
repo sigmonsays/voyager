@@ -135,7 +135,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		if server_alias, ok := voy.Servers[server_host]; ok {
 			log.Debugf("server %s is a alias for %s", server_host, server_alias)
-			req.Server = fmt.Sprintf("%s:%s", server_alias, server_port)
+			req.ServerName = fmt.Sprintf("%s:%s", server_alias, server_port)
 		}
 
 		s.RemoteRequest(w, r, req)

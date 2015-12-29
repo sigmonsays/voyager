@@ -29,7 +29,7 @@ type ListPathRequest struct {
 }
 
 func (p *ListPathRequest) String() string {
-	return fmt.Sprintf("server:%s user:%s path:%s", p.Server, p.User, p.Path)
+	return fmt.Sprintf("server:%s(%s) user:%s path:%s", p.Server, p.ServerName, p.User, p.Path)
 }
 
 type ListPathResponse struct {
