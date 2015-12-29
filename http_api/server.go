@@ -97,9 +97,10 @@ func (s *Server) parseRequest(path string) (*types.ListPathRequest, error) {
 	}
 
 	res := &types.ListPathRequest{
-		Server: server,
-		User:   username,
-		Path:   "/" + strings.Join(tmp[2:], "/"),
+		Server:     server,
+		ServerName: server,
+		User:       username,
+		Path:       "/" + strings.Join(tmp[2:], "/"),
 	}
 
 	log.Tracef("user=%s: path %s return %+v", username, path, res)

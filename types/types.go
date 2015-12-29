@@ -19,9 +19,13 @@ func (p *PathRequest) String() string {
 }
 
 type ListPathRequest struct {
+	// the server name (alias if used)
 	Server string
-	User   string
-	Path   string
+	// the resolved server name (real IP or dns name)
+	ServerName string
+
+	User string
+	Path string
 }
 
 func (p *ListPathRequest) String() string {
