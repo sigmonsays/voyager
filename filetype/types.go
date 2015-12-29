@@ -15,6 +15,7 @@ const (
 	PictureFile
 	VideoFile
 	AudioFile
+	ListFile
 )
 
 var Picture = map[string]bool{
@@ -87,6 +88,7 @@ func init() {
 		"pictures": PictureFile,
 		"video":    VideoFile,
 		"audio":    AudioFile,
+		"list":     ListFile,
 	}
 
 	for name, ftype := range FileTypeNames {
