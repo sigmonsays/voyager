@@ -33,5 +33,6 @@ message ListResponse {
    ListRequest request = 1;
    string layout = 2;
    string url_prefix = 3;
-   repeated File Files = 4;
+   string remote_server = 4;
+   repeated File Files = 5;
 };
