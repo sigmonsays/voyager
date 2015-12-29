@@ -4,9 +4,9 @@ package filetype
 
 import "fmt"
 
-const _FileType_name = "UnknownFilePictureFileVideoFileAudioFile"
+const _FileType_name = "UnknownFilePictureFileVideoFileAudioFileListFile"
 
-var _FileType_index = [...]uint8{0, 11, 22, 31, 40}
+var _FileType_index = [...]uint8{0, 11, 22, 31, 40, 48}
 
 func (i FileType) String() string {
 	if i < 0 || i >= FileType(len(_FileType_index)-1) {
