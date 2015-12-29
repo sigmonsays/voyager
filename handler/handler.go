@@ -20,10 +20,16 @@ type Handler struct {
 	// ~/username portion
 	UrlPrefix string
 
-	// local path
+	// http:// with host and port of server
+	RemoteServer string
+
+	// local "root" path
 	RootPath string
 
-	Path  string
+	// the requested path
+	Path string
+
+	// list of files
 	Files []*types.File
 }
 

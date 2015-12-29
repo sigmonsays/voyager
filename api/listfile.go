@@ -35,6 +35,8 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 		return nil, err
 	}
 
+	log.Tracef("paths %s", paths)
+
 	// load the file contents
 	files, err := api.PathLoader.GetFiles(paths.LocalPath)
 	if err != nil {

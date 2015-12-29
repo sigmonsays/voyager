@@ -22,13 +22,14 @@ func NewPictureHandler(handler *Handler) *PictureHandler {
 }
 
 type Gallery struct {
-	Path        string
-	LocalPath   string
-	UrlPrefix   string
-	Title       string
-	Files       []*types.File
-	Directories []*types.File
-	Breadcrumb  *Breadcrumb
+	Path         string
+	LocalPath    string
+	UrlPrefix    string
+	RemoteServer string
+	Title        string
+	Files        []*types.File
+	Directories  []*types.File
+	Breadcrumb   *Breadcrumb
 }
 
 func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -43,12 +44,13 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
 
 	data := &Gallery{
-		Title:      "Pictures",
-		Files:      make([]*types.File, 0),
-		Path:       h.Path,
-		LocalPath:  h.LocalPath(),
-		UrlPrefix:  h.UrlPrefix,
-		Breadcrumb: NewBreadcrumb(),
+		Title:        "Pictures",
+		Files:        make([]*types.File, 0),
+		Path:         h.Path,
+		LocalPath:    h.LocalPath(),
+		UrlPrefix:    h.UrlPrefix,
+		RemoteServer: h.RemoteServer,
+		Breadcrumb:   NewBreadcrumb(),
 	}
 
 	log.Tracef("handler %#v data %+v", h.Handler, data)

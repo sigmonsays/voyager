@@ -151,8 +151,9 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 	log.Debugf("response %+v", res)
 
 	hndlr := &handler.Handler{
-		Username:  req.User,
-		UrlPrefix: res.UrlPrefix,
+		Username:     req.User,
+		UrlPrefix:    res.UrlPrefix,
+		RemoteServer: res.RemoteServer,
 		/*
 			RootPath:  paths.RootPath,
 			Path:      paths.RelPath,
