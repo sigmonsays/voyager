@@ -39,7 +39,8 @@ prefix         {{$prefix}}
 
    {{range $i, $f := .Files}}
    <tr >
-      <td><a href="{{$prefix}}/{{$f.Name}}"></a></td>
+      <td><a href="{{$prefix}}/{{$f.Name}}">{{$f.Name}}</a></td>
+      <td>{{ $f.Size }}</td>
    </tr>
    {{end}}
    </table>
