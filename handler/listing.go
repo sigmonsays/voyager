@@ -18,7 +18,7 @@ func NewListHandler(handler *Handler) *ListHandler {
 func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	tmp := strings.Split(r.URL.Path, "/")
-	strip_prefix := tmp[1]
+	strip_prefix := "/" + tmp[1]
 
 	log.Debugf("serve path:%s (stripPrefix:%s relpath:%s urlPrefix:%s localPath:%s rootPath:%s)",
 		r.URL.Path, strip_prefix, h.RelPath, h.UrlPrefix, h.LocalPath, h.RootPath)
