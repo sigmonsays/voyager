@@ -89,7 +89,7 @@ func NewServer(addr string, opts *Options) *Server {
 func (s *Server) Start() error {
 	s.mux.Handle("/dashboard", s.Dashboard)
 	s.mux.Handle("/dashboard/", s.Dashboard)
-	log.Infof("starting server")
+	log.Infof("starting server at %s", s.srv.Addr)
 	return s.srv.ListenAndServe()
 }
 
