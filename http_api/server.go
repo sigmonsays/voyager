@@ -187,6 +187,12 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 		LocalPath:    res.LocalPath,
 	}
 
+	if res.IsDir == false {
+		// deliver the object normally
+		handler.NewListHandler(hndlr).ServeHTTP(w, r)
+		return
+	}
+
 	hndlr.Layout = filetype.TypeFromString(res.Layout)
 	files := make([]*types.File, 0)
 	for _, file := range res.Files {

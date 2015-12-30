@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/url"
+	"os"
 
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/proto/vapi"
@@ -37,6 +38,22 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 
 	log.Tracef("paths %s", paths)
 
+	// return a error if
+	st, err := os.Stat(paths.LocalPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if st.IsDir() == false {
+		res := &vapi.ListResponse{
+			IsDir:        false,
+			RelPath:      paths.RelPath,
+			LocalPath:    paths.LocalPath,
+			RemoteServer: "http://" + api.ServerName,
+		}
+		return res, nil
+	}
+
 	// load the file contents
 	files, err := api.PathLoader.GetFiles(paths.LocalPath)
 	if err != nil {
@@ -57,6 +74,7 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 	urlp.Path = paths.UrlPrefix
 
 	res := &vapi.ListResponse{
+		IsDir:        true,
 		Layout:       filetype.TypeToString(layout),
 		UrlPrefix:    urlp.String(),
 		RelPath:      paths.RelPath,

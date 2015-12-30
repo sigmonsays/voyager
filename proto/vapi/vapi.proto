@@ -34,12 +34,13 @@ message ListRequest {
 };
 message ListResponse {
    ListRequest request = 1;
-   string layout = 2;
-   string url_prefix = 3;
-   string remote_server = 4;
-   string rel_path = 5;
-   string local_path = 6;
-   repeated File Files = 7;
+   bool is_dir = 2;
+   string layout = 3;
+   string url_prefix = 4;
+   string remote_server = 5;
+   string rel_path = 6;
+   string local_path = 7;
+   repeated File Files = 8;
 };
 
 // RPC GetConfig
