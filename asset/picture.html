@@ -1,3 +1,6 @@
+
+{{ $prefix := printf "%s/%s" .UrlPrefix  .RelPath }}
+
 <html>
 <head>
    <title>Pictures in {{.RelPath}}</title>
@@ -12,7 +15,6 @@
 
 <h2>Pictures in {{.RelPath}}</h2>
 
-{{ $prefix := printf "%s/%s" .UrlPrefix  .RelPath }}
 
 <!--
 Path           {{.Path}}

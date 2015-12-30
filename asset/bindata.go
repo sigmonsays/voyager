@@ -2,6 +2,7 @@
 // sources:
 // README.md
 // audio.html
+// dashboard.html
 // favicon.ico
 // jquery-1.11.3.min.js
 // list.html
@@ -75,6 +76,24 @@ func readmeMd() (*asset, error) {
 func audioHtml() (*asset, error) {
 	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/audio.html"
 	name := "audio.html"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// dashboardHtml reads file data from disk. It returns an error on failure.
+func dashboardHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/dashboard.html"
+	name := "dashboard.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -593,6 +612,7 @@ func AssetNames() []string {
 var _bindata = map[string]func() (*asset, error){
 	"README.md": readmeMd,
 	"audio.html": audioHtml,
+	"dashboard.html": dashboardHtml,
 	"favicon.ico": faviconIco,
 	"jquery-1.11.3.min.js": jquery1113MinJs,
 	"list.html": listHtml,
@@ -662,6 +682,7 @@ type bintree struct {
 var _bintree = &bintree{nil, map[string]*bintree{
 	"README.md": &bintree{readmeMd, map[string]*bintree{}},
 	"audio.html": &bintree{audioHtml, map[string]*bintree{}},
+	"dashboard.html": &bintree{dashboardHtml, map[string]*bintree{}},
 	"favicon.ico": &bintree{faviconIco, map[string]*bintree{}},
 	"jPlayer": &bintree{nil, map[string]*bintree{
 		"add-on": &bintree{nil, map[string]*bintree{

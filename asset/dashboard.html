@@ -1,0 +1,26 @@
+{{ $prefix := printf "%s" .UrlPrefix  }}
+<head>
+   <title>Dashboard for {{.Username}}</title>
+   <link href="/s/style.css" media="all" rel="stylesheet" />
+</head>
+<body>
+<div class=page>
+
+<h2>Dashboard for {{.Username}}</h2>
+
+<h3>Servers</h3>
+{{range $alias, $server := .Voy.Servers }}
+<li><a href="{{$prefix}}/{{$alias}}/">{{$alias}}</a> - {{$server}}</li> 
+{{end}}
+
+<h3>Local Paths</h3>
+{{range $i, $path := .Voy.Allow }}
+<li><a href="{{$prefix}}/{{$path}}/">{{$path}}</a></li> 
+{{end}}
+{{range $path, $fspath := .Voy.Alias }}
+<li><a href="{{$prefix}}/{{$path}}/">{{$path}}</a> (aliased to {{$fspath}})</li> 
+{{end}}
+
+</div>
+</body>
+</html>

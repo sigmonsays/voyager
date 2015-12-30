@@ -22,7 +22,8 @@ type ApplicationConfig struct {
 	Http *HttpConfig
 	Rpc  *RpcConfig
 
-	Servers map[string]string
+	Username string
+	Servers  map[string]string
 }
 
 type HttpConfig struct {

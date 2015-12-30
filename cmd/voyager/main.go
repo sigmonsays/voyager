@@ -122,6 +122,10 @@ func main() {
 	srv.Layout = layoutResolver
 	srv.VoyFile = voyLoader
 	srv.Ctx = ctx
+	srv.Dashboard = handler.NewDashboardHandler()
+	srv.Dashboard.VoyFile = voyLoader
+	srv.Dashboard.Username = cfg.Username
+
 	go func() {
 		err = srv.Start()
 		if err != nil {

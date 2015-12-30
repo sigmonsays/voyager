@@ -32,8 +32,10 @@ type Server struct {
 	PathLoader handler.PathLoader
 	Layout     layout.LayoutResolver
 	VoyFile    voy.VoyLoader
+	Dashboard  *handler.DashboardHandler
 
 	srv *http.Server
+	mux *http.ServeMux
 }
 
 func NewServer(addr string) *Server {
@@ -64,11 +66,14 @@ func NewServer(addr string) *Server {
 	)
 	mux.Handle("/s/", http.StripPrefix("/s", static))
 	mux.Handle("/favicon.ico", static)
+	s.mux = mux
 
 	return s
 }
 
 func (s *Server) Start() error {
+	s.mux.Handle("/dashboard", s.Dashboard)
+	s.mux.Handle("/dashboard/", s.Dashboard)
 	log.Infof("starting server")
 	return s.srv.ListenAndServe()
 }
