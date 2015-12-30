@@ -123,6 +123,7 @@ func main() {
 	srv.VoyFile = voyLoader
 	srv.Ctx = ctx
 	srv.Dashboard = handler.NewDashboardHandler()
+	srv.Dashboard.Ctx = ctx
 	srv.Dashboard.VoyFile = voyLoader
 	srv.Dashboard.Username = cfg.Username
 

@@ -1,4 +1,3 @@
-{{ $prefix := printf "%s" .UrlPrefix  }}
 <head>
    <title>Dashboard for {{.Username}}</title>
    <link href="/s/style.css" media="all" rel="stylesheet" />
@@ -8,17 +7,28 @@
 
 <h2>Dashboard for {{.Username}}</h2>
 
-<h3>Servers</h3>
-{{range $alias, $server := .Voy.Servers }}
-<li><a href="{{$prefix}}/{{$alias}}/">{{$alias}}</a> - {{$server}}</li> 
-{{end}}
+{{ $prefix := printf "%s" .UrlPrefix  }}
 
-<h3>Local Paths</h3>
-{{range $i, $path := .Voy.Allow }}
-<li><a href="{{$prefix}}/{{$path}}/">{{$path}}</a></li> 
-{{end}}
-{{range $path, $fspath := .Voy.Alias }}
-<li><a href="{{$prefix}}/{{$path}}/">{{$path}}</a> (aliased to {{$fspath}})</li> 
+{{range $server, $info := .ServerData }}
+
+
+<h3>Server {{$server}}</h3>
+
+   <h3>Servers</h3>
+   {{range $alias, $server := $info.Voy.Servers }}
+   <li><a href="{{$prefix}}@{{$alias}}/">{{$alias}}</a> ({{$server}})</li> 
+   {{end}}
+
+   <h3>Paths</h3>
+   {{range $i, $path := $info.Voy.Allow }}
+   <li><a href="{{$prefix}}@{{$server}}/{{$path}}/">{{$path}}</a></li> 
+   {{end}}
+   {{range $path, $fspath := $info.Voy.Alias }}
+   <li><a href="{{$prefix}}@{{$server}}/{{$path}}/">{{$path}}</a> (aliased to {{$fspath}})</li> 
+   {{end}}
+
+   <p/>
+
 {{end}}
 
 </div>
