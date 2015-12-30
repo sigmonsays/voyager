@@ -156,6 +156,8 @@ func main() {
 
 	vapi.RegisterVApiServer(http2_serv, http2_api)
 
+	log.Infof("finished initializing")
+
 	log.Infof("%s", cfg.StartupBanner)
 
 	err = http2_serv.Serve(lis)
