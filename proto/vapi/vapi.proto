@@ -6,6 +6,7 @@ package vapi;
 service VApi {
    rpc Ping(PingRequest) returns (PingResponse) {}
    rpc ListFiles(ListRequest) returns (ListResponse) {}
+   rpc GetConfig(ConfigRequest) returns (ConfigResponse) {}
 
 }
 
@@ -39,4 +40,14 @@ message ListResponse {
    string rel_path = 5;
    string local_path = 6;
    repeated File Files = 7;
+};
+
+// RPC GetConfig
+message ConfigRequest {
+   string user = 1;
+};
+message ConfigResponse {
+   repeated string allow = 1;
+   map <string, string> alias = 2;
+   map <string, string> servers = 3;
 };
