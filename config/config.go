@@ -24,6 +24,8 @@ type ApplicationConfig struct {
 
 	Username string
 	Servers  map[string]string
+
+	ACL []string
 }
 
 type HttpConfig struct {

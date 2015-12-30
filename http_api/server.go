@@ -11,6 +11,7 @@ import (
 	"github.com/sigmonsays/go-apachelog"
 	"golang.org/x/net/context"
 
+	"github.com/sigmonsays/voyager/acl"
 	"github.com/sigmonsays/voyager/asset"
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
@@ -38,9 +39,23 @@ type Server struct {
 	mux *http.ServeMux
 }
 
-func NewServer(addr string) *Server {
+type Options struct {
+	Networks []string
+}
+
+func NewServer(addr string, opts *Options) *Server {
 	mux := http.NewServeMux()
-	hndlr := apachelog.NewHandler(mux, os.Stderr)
+	var err error
+	var hndlr http.Handler
+	hndlr = mux
+	hndlr, err = acl.NewHandlerWithNetworks(hndlr, opts.Networks)
+	if err != nil {
+		log.Warnf("error: %s", err)
+		return nil
+	}
+
+	hndlr = apachelog.NewHandler(hndlr, os.Stderr)
+
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: hndlr,

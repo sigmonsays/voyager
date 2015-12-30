@@ -114,7 +114,10 @@ func main() {
 	ctx = metadata.NewContext(ctx, md)
 
 	// the HTTP server
-	srv := http_api.NewServer(cfg.Http.BindAddr)
+	opts := &http_api.Options{
+		Networks: cfg.ACL,
+	}
+	srv := http_api.NewServer(cfg.Http.BindAddr, opts)
 	srv.Conf = cfg
 	srv.Cache = cache
 	srv.Factory = handlerFactory
