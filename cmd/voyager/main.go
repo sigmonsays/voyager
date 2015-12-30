@@ -114,6 +114,7 @@ func main() {
 	ctx = metadata.NewContext(ctx, md)
 
 	// the HTTP server
+	log.Infof("starting HTTP server at %s", cfg.Http.BindAddr)
 	opts := &http_api.Options{
 		Networks: cfg.ACL,
 	}
@@ -139,6 +140,7 @@ func main() {
 	}()
 
 	// the RPC server
+	log.Infof("starting RPC server at %s", cfg.Rpc.BindAddr)
 	lis, err := net.Listen("tcp", cfg.Rpc.BindAddr)
 	if err != nil {
 		util.ExitIfError(err, "grpc listen %s: %s", cfg.Rpc.BindAddr, err)
