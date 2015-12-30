@@ -47,14 +47,13 @@ func NewServer(addr string, opts *Options) *Server {
 	mux := http.NewServeMux()
 	var err error
 	var hndlr http.Handler
-	hndlr = mux
+	hndlr = apachelog.NewHandler(mux, os.Stderr)
+
 	hndlr, err = acl.NewHandlerWithNetworks(hndlr, opts.Networks)
 	if err != nil {
 		log.Warnf("error: %s", err)
 		return nil
 	}
-
-	hndlr = apachelog.NewHandler(hndlr, os.Stderr)
 
 	srv := &http.Server{
 		Addr:    addr,
