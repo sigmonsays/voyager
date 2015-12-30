@@ -2,6 +2,8 @@ package handler
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -26,6 +28,15 @@ func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	tmplData, err := asset.Asset("list.html")
 	if err != nil {
 		WriteError(w, r, "template: %s", err)
+		return
+	}
+
+	st, err := os.Stat(h.LocalPath)
+	if err == nil && st.IsDir() == false {
+		dirname := filepath.Dir(h.LocalPath)
+		prefix := filepath.Dir(r.URL.Path)
+		log.Debugf("Serving static file path %s: dirname:%s prefix:%s localpath:%s", r.URL.Path, dirname, prefix, h.LocalPath)
+		http.StripPrefix(prefix, http.FileServer(http.Dir(dirname))).ServeHTTP(w, r)
 		return
 	}
 
