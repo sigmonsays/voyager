@@ -1,4 +1,14 @@
 <html>
+{{ $prefix := printf "%s/%s" .UrlPrefix  .RelPath }}
+<!--
+Path           {{.Path}}
+UrlPrefix      {{.UrlPrefix}}
+RelPath        {{.RelPath}}
+LocalPath      {{.LocalPath}}
+RemoteServer   {{.RemoteServer}}
+
+prefix         {{$prefix}}
+-->
 <head>
    <title>Audio in {{$.Path}}</title>
    <link href="/s/style.css" media="all" rel="stylesheet" />
