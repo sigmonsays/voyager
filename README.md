@@ -9,6 +9,8 @@ A remote API is currently in development to allow connecting to remote servers.
 # features
 - context aware layout (photos, video, audio, etc)
 - image resize for thumbnails with a local cache
+- HTML5 video playback using jplayer
+- HTML5 audio playback using jplayer
 - remote API so multiple voyagers can talk to each other
 
 
