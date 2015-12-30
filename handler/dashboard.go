@@ -50,6 +50,7 @@ func (me *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	v, err := me.VoyFile.Load(req)
 	if err != nil {
+		log.Warnf("Load %s", err)
 		return
 	}
 	data.ServerData["localhost"] = &ServerData{
@@ -57,6 +58,8 @@ func (me *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		ServerAddr: "localhost",
 		Voy:        v,
 	}
+
+	log.Tracef("servers %s", v.Servers)
 
 	dopts := vapi.DefaultDialOptions()
 	for server, server_addr := range v.Servers {
