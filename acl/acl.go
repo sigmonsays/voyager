@@ -53,6 +53,16 @@ func NewHandlerWithNetworks(h http.Handler, networks []string) (http.Handler, er
 func (h *handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	tmp := strings.Split(r.RemoteAddr, ":")
 	ip := net.ParseIP(tmp[0])
+
+	if ip.String() == "127.0.0.1" {
+		// allow the proxy header to be used instead..
+		forwarded_for := r.Header.Get("X-Forwarded-For")
+		if forwarded_for != "" {
+			log.Infof("TODO: Forwarded for %s", forwarded_for)
+		}
+
+	}
+
 	allowed := false
 	for _, net := range h.nets {
 		if net.Contains(ip) {
