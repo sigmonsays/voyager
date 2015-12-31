@@ -30,7 +30,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmpl := template.Must(template.New("pictures.html").Parse(string(tmplData)))
+	tmpl := template.Must(h.Template.New("pictures").Parse(string(tmplData)))
 
 	data := &Gallery{
 		Title:        "Pictures",

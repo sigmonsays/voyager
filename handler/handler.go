@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"text/template"
 
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/types"
@@ -37,6 +38,9 @@ type Handler struct {
 
 	// list of files
 	Files []*types.File
+
+	// a common template object
+	Template *template.Template
 }
 
 func (h *Handler) Url(paths ...string) string {

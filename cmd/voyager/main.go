@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"text/template"
 
 	"github.com/sigmonsays/voyager/api"
 	"github.com/sigmonsays/voyager/cache"
@@ -109,6 +110,9 @@ func main() {
 
 	voyLoader := voy.NewVoyLoader()
 
+	root_template := template.New("root")
+	template.Must(root_template.New("footer").Parse(footerTemplate))
+
 	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
 	ctx := context.Background()
 	ctx = metadata.NewContext(ctx, md)
@@ -126,6 +130,7 @@ func main() {
 	srv.Layout = layoutResolver
 	srv.VoyFile = voyLoader
 	srv.Ctx = ctx
+	srv.Template = root_template
 	srv.Dashboard = handler.NewDashboardHandler()
 	srv.Dashboard.Ctx = ctx
 	srv.Dashboard.VoyFile = voyLoader

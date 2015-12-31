@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"text/template"
 
 	"github.com/elazarl/go-bindata-assetfs"
 	"github.com/sigmonsays/go-apachelog"
@@ -34,6 +35,7 @@ type Server struct {
 	Layout     layout.LayoutResolver
 	VoyFile    voy.VoyLoader
 	Dashboard  *handler.DashboardHandler
+	Template   *template.Template
 
 	srv *http.Server
 	mux *http.ServeMux
@@ -199,6 +201,7 @@ func (s *Server) RemoteRequest(w http.ResponseWriter, r *http.Request, req *type
 		RemoteServer: res.RemoteServer,
 		RelPath:      res.RelPath,
 		LocalPath:    res.LocalPath,
+		Template:     s.Template,
 	}
 
 	if res.IsDir == false {
@@ -255,6 +258,7 @@ func (s *Server) LocalRequest(w http.ResponseWriter, r *http.Request, req *types
 		RelPath:   paths.RelPath,
 		UrlPrefix: paths.UrlPrefix,
 		LocalPath: paths.LocalPath,
+		Template:  s.Template,
 	}
 
 	// call the path loader
