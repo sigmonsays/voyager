@@ -23,7 +23,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	reload_git "github.com/sigmonsays/git-watch/reload/git"
+	reload_git "github.com/sigmonsays/git-watch/watch/git"
 	gologging "github.com/sigmonsays/go-logging"
 )
 
