@@ -21,16 +21,18 @@ func NewPictureHandler(handler *Handler) *PictureHandler {
 	}
 }
 
-func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
+var tmpl *template.Template
 
+func init() {
 	tmplData, err := asset.Asset("picture.html")
 	if err != nil {
-		WriteError(w, r, "template: %s", err)
-		return
+		log.Errorf("template: %s", err)
 	}
+	tmpl = template.Must(template.New("pictures").Parse(string(tmplData)))
+}
 
-	tmpl := template.Must(h.Template.New("pictures").Parse(string(tmplData)))
+func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
 	data := &Gallery{
 		Title:        "Pictures",
@@ -60,7 +62,7 @@ func (h *PictureHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = tmpl.Execute(w, data)
+	err := tmpl.Execute(w, data)
 	if err != nil {
 		WriteError(w, r, "template render: %s", err)
 		return
