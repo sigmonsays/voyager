@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"strings"
 )
 
 type handler struct {
@@ -51,10 +50,13 @@ func NewHandlerWithNetworks(h http.Handler, networks []string) (http.Handler, er
 }
 
 func (h *handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	tmp := strings.Split(r.RemoteAddr, ":")
-	ip := net.ParseIP(tmp[0])
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		log.Warnf("split hostport %s", err)
+	}
+	ip := net.ParseIP(host)
 
-	if ip.String() == "127.0.0.1" {
+	if ip.String() == "127.0.0.1" || ip.String() == "::1" {
 		// allow the proxy header to be used instead..
 		forwarded_for := r.Header.Get("X-Forwarded-For")
 		if forwarded_for != "" {
@@ -72,6 +74,7 @@ func (h *handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	// fmt.Printf("%s access=%v\n", tmp[0], allowed)
 	if allowed == false {
+		log.Tracef("acl denied access to client %s (%s)", ip, r.RemoteAddr)
 		rw.WriteHeader(http.StatusForbidden)
 		fmt.Fprintf(rw, "Forbidden")
 		return
