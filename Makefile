@@ -7,3 +7,6 @@ dev:
 	go get -u github.com/golang/protobuf/protoc-gen-go                                                                                                                            
 
 	$(MAKE) -C asset dev
+
+server:
+	voyager -log trace
