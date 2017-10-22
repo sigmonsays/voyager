@@ -61,17 +61,7 @@ func main() {
 		return nil
 	}
 
-	ping := cli.Command{
-		Name:        "ping",
-		Usage:       "ping rpc",
-		Description: PingDescription,
-		Flags:       PingFlags,
-		Action:      app.Ping,
-	}
-
-	app.Commands = []cli.Command{
-		ping,
-	}
+	app.Commands = GetCommands(app)
 	app.Run(os.Args)
 
 }
