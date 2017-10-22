@@ -50,6 +50,7 @@ func main() {
 			log.Errorf("load config %s: %s", cfgfile, err)
 			return
 		}
+		log.Tracef("loaded %s", cfgfile)
 	}
 
 	if cfg.LogLevel != "" {
