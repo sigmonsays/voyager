@@ -116,7 +116,7 @@ func main() {
 
 	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
 	ctx := context.Background()
-	ctx = metadata.NewContext(ctx, md)
+	ctx = metadata.NewIncomingContext(ctx, md)
 
 	// the HTTP server
 	log.Infof("starting HTTP server at %s", cfg.Http.BindAddr)

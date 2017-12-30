@@ -39,7 +39,7 @@ func MakeApi(cfg *config.ApplicationConfig) *VoyApi {
 }
 
 func (api *VoyApi) Authenticate(ctx context.Context) error {
-	md, ok := metadata.FromContext(ctx)
+	md, ok := metadata.FromIncomingContext(ctx)
 	if ok == false {
 		return fmt.Errorf("authenticate: no metadata")
 	}
