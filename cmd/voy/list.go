@@ -29,7 +29,7 @@ func (ac *Application) List(c *cli.Context) {
 
 	md := metadata.Pairs("request-secret", ac.Cfg.Rpc.Secret)
 	ctx := context.Background()
-	ctx = metadata.NewContext(ctx, md)
+	ctx = metadata.NewOutgoingContext(ctx, md)
 
 	dopts := vapi.DefaultDialOptions()
 
