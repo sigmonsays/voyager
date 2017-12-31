@@ -6,9 +6,18 @@ types of files found.
 
 A remote API is currently in development to allow connecting to remote servers.
 
+# index
+
+| section                         | description     |
+| ---                             | ---             |
+| [features](#features)           | feature summary |
+| [install](#install)             | installation    |
+| [configuration](#configuration) | configuration   |
+| [image handling](#image-handling) | image handling   |
+
 # features
 - context aware layout (photos, video, audio, etc)
-- image resize for thumbnails with a local cache
+- image resize for thumbnails with a local cache, see [image handling](#image-handling)
 - HTML5 video playback using jplayer
 - HTML5 audio playback using jplayer
 - remote API so multiple voyagers can talk to each other
@@ -46,5 +55,16 @@ The following parameters are available
 - allow - list - list of paths to allow from your home directory
 - layouts - map - map of paths enforcing a layout. Most significant path is used.
 - alias - map - map of top path name to alias local path
+- cachedir - string - `/tmp/voyager` - cache directory (image cache)
+
+
+# image handling
+
+When voyager finds a directory with files which are mostly images the image handler will be invoked. 
+
+The image handler will render thumbnails for each image found. It make take a little to load the first time due to image resizing. The resizing happens
+during page load.
+
+The resized images are cached in `cachedir` which by default is `/tmp/voyager`
 
 
