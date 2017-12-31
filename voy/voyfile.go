@@ -12,10 +12,11 @@ import (
 type VoyFile struct {
 	section string
 
-	Allow   []string
-	Alias   map[string]string
-	Layouts map[string]string
-	Servers map[string]string
+	ServerName string `yaml:"servername"`
+	Allow      []string
+	Alias      map[string]string
+	Layouts    map[string]string
+	Servers    map[string]string
 }
 
 func (c *VoyFile) Allowed(path string) bool {

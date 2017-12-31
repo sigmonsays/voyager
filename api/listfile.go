@@ -11,11 +11,11 @@ import (
 	"golang.org/x/net/context"
 )
 
-func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.ListResponse, error) {
+func (me *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.ListResponse, error) {
 
 	log.Tracef("listfiles %#v", in)
 
-	err := api.Authenticate(ctx)
+	err := me.Authenticate(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -26,12 +26,12 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 		Path: in.Path,
 	}
 
-	voy, err := api.VoyFile.Load(req)
+	voy, err := me.VoyFile.Load(req)
 	if err != nil {
 		return nil, err
 	}
 
-	paths, err := api.VoyFile.ResolvePath(voy, req)
+	paths, err := me.VoyFile.ResolvePath(voy, req)
 	if err != nil {
 		return nil, err
 	}
@@ -49,13 +49,13 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 			IsDir:        false,
 			RelPath:      paths.RelPath,
 			LocalPath:    paths.LocalPath,
-			RemoteServer: "http://" + api.ServerName,
+			RemoteServer: "http://" + me.ServerName,
 		}
 		return res, nil
 	}
 
 	// load the file contents
-	files, err := api.PathLoader.GetFiles(paths.LocalPath)
+	files, err := me.PathLoader.GetFiles(paths.LocalPath)
 	if err != nil {
 		return nil, err
 	}
@@ -63,14 +63,15 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 	log.Tracef("files:%d", len(files))
 
 	// determine the layout
-	layout, err := api.Layout.Resolve(voy, paths.LocalPath, files)
+	layout, err := me.Layout.Resolve(voy, paths.LocalPath, files)
 	if err != nil {
 		return nil, err
 	}
 
 	urlp := &url.URL{}
 	urlp.Scheme = "http"
-	urlp.Host = api.ServerName
+	//urlp.Host = me.ServerName
+	urlp.Host = voy.ServerName
 	urlp.Path = paths.UrlPrefix
 
 	res := &vapi.ListResponse{
@@ -79,7 +80,7 @@ func (api *VoyApi) ListFiles(ctx context.Context, in *vapi.ListRequest) (*vapi.L
 		UrlPrefix:    urlp.String(),
 		RelPath:      paths.RelPath,
 		LocalPath:    paths.LocalPath,
-		RemoteServer: "http://" + api.ServerName,
+		RemoteServer: "http://" + me.ServerName,
 	}
 
 	for _, file := range files {
