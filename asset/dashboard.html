@@ -6,32 +6,20 @@
 <div class=page>
 
 <h2>Dashboard for {{.Username}}</h2>
+<p/>
 
 {{ $prefix := printf "%s" .UrlPrefix  }}
-
 {{range $server, $info := .ServerData }}
-
-
-<h3>Server {{$server}}</h3>
-
-   <h3>Servers</h3>
-   {{range $alias, $server := $info.Voy.Servers }}
-   <li><a href="{{$prefix}}@{{$alias}}/">{{$alias}}</a> ({{$server}})</li> 
-   {{end}}
-
-   <h3>Paths</h3>
+<div class=server>
+   <h3>Server {{$server}}</h3>
    {{range $i, $path := $info.Voy.Allow }}
    <li><a href="{{$prefix}}@{{$server}}/{{$path}}/">{{$path}}</a></li> 
    {{end}}
    {{range $path, $fspath := $info.Voy.Alias }}
    <li><a href="{{$prefix}}@{{$server}}/{{$path}}/">{{$path}}</a> (aliased to {{$fspath}})</li> 
    {{end}}
-
-   <hr>
-   <p/>
-
+</div>
 {{end}}
-
 </div>
 </body>
 </html>
