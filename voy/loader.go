@@ -36,7 +36,6 @@ func (l *fileLoader) Load(req *types.ListPathRequest) (*VoyFile, error) {
 	if err != nil {
 		return nil, fmt.Errorf("load voyfile %s: %s", voyfile, err)
 	}
-	// todo: Load node specific config
 
 	return cfg, nil
 }
