@@ -152,8 +152,9 @@ type partial struct {
 	ConfigFile map[string]interface{}
 }
 
-func GetConfigSection(configfile, section string) ([]byte, error) {
-	buf, err := ioutil.ReadFile(configfile)
+func GetConfigSection(path, section string) ([]byte, error) {
+	log.Tracef("GetConfigSection path=%q section=%q", path, section)
+	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
