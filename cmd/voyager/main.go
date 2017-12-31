@@ -119,6 +119,10 @@ func main() {
 	ctx := context.Background()
 	ctx = metadata.NewOutgoingContext(ctx, md)
 
+	// dashboard handler
+	dhandle := handler.NewDashboardHandler()
+	dhandle.LocalhostServer = false
+
 	// the HTTP server
 	log.Infof("starting HTTP server at %s", cfg.Http.BindAddr)
 	opts := &http_api.Options{
@@ -133,7 +137,8 @@ func main() {
 	srv.VoyFile = voyLoader
 	srv.Ctx = ctx
 	srv.Template = root_template
-	srv.Dashboard = handler.NewDashboardHandler()
+
+	srv.Dashboard = dhandle
 	srv.Dashboard.Ctx = ctx
 	srv.Dashboard.VoyFile = voyLoader
 	srv.Dashboard.Username = cfg.Username

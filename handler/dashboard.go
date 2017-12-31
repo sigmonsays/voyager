@@ -21,6 +21,8 @@ type DashboardHandler struct {
 	Username string
 	VoyFile  voy.VoyLoader
 	Ctx      context.Context
+	// load a loacal host server
+	LocalhostServer bool
 }
 
 type DashboardData struct {
@@ -53,10 +55,13 @@ func (me *DashboardHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Warnf("Load %s", err)
 		return
 	}
-	data.ServerData["localhost"] = &ServerData{
-		Server:     "localhost",
-		ServerAddr: "localhost",
-		Voy:        v,
+
+	if me.LocalhostServer {
+		data.ServerData["localhost"] = &ServerData{
+			Server:     "localhost",
+			ServerAddr: "localhost",
+			Voy:        v,
+		}
 	}
 
 	log.Tracef("servers %s", v.Servers)

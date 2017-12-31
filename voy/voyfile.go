@@ -63,7 +63,7 @@ func (c *VoyFile) PrintYaml() {
 func DefaultConfig() *VoyFile {
 
 	hostname, err := os.Hostname()
-	if err == nil {
+	if err != nil {
 		log.Warnf("Hostname: %s", err)
 	}
 	var section string
