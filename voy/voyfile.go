@@ -35,7 +35,17 @@ func (c *VoyFile) LoadDefault() {
 
 func (c *VoyFile) LoadYaml(path string) error {
 
-	b, err := config.GetConfigSection(path, c.section)
+	// load default section
+	b, err := config.GetConfigSection(path, "default")
+	if err != nil {
+		return err
+	}
+	if err := c.LoadYamlBuffer(b); err != nil {
+		return err
+	}
+
+	// load hostname based section
+	b, err = config.GetConfigSection(path, c.section)
 	if err != nil {
 		return err
 	}
