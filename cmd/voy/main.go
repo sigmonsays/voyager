@@ -45,7 +45,7 @@ func main() {
 	app.Before = func(c *cli.Context) error {
 		var err error
 
-		cfgfile := filepath.Join(os.Getenv("HOME"), ".voyager")
+		cfgfile := filepath.Join(os.Getenv("HOME"), ".voyager.cfg")
 		if util.FileExists(cfgfile) {
 			err = cfg.LoadYaml(cfgfile)
 			if err != nil {

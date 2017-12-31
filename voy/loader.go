@@ -30,12 +30,13 @@ func (l *fileLoader) Load(req *types.ListPathRequest) (*VoyFile, error) {
 	homedir := user_ent.HomeDir
 
 	cfg := DefaultConfig()
-	voyfile := filepath.Join(homedir, ".voyager")
+	voyfile := filepath.Join(homedir, ".voyager.cfg")
 
 	err = cfg.LoadYaml(voyfile)
 	if err != nil {
 		return nil, fmt.Errorf("load voyfile %s: %s", voyfile, err)
 	}
+	// todo: Load node specific config
 
 	return cfg, nil
 }

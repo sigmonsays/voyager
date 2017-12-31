@@ -43,9 +43,9 @@ func main() {
 
 	var err error
 
-	cfgfile := filepath.Join(os.Getenv("HOME"), ".voyager")
+	cfgfile := filepath.Join(os.Getenv("HOME"), ".voyager.cfg")
 	if util.FileExists(cfgfile) {
-		err = cfg.LoadYaml(cfgfile)
+		err = cfg.LoadYamlSection(cfgfile, "default")
 		if err != nil {
 			log.Errorf("load config %s: %s", cfgfile, err)
 			return
@@ -114,9 +114,10 @@ func main() {
 	root_template := template.New("root")
 	template.Must(root_template.New("footer").Parse(footerTemplate))
 
+	log.Tracef("rpc secret %q", cfg.Rpc.Secret)
 	md := metadata.Pairs("request-secret", cfg.Rpc.Secret)
 	ctx := context.Background()
-	ctx = metadata.NewIncomingContext(ctx, md)
+	ctx = metadata.NewOutgoingContext(ctx, md)
 
 	// the HTTP server
 	log.Infof("starting HTTP server at %s", cfg.Http.BindAddr)

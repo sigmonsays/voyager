@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -67,6 +68,19 @@ func (c *ApplicationConfig) LoadYaml(path string) error {
 
 	return nil
 }
+func (me *ApplicationConfig) LoadYamlSection(path, section string) error {
+	b, err := GetConfigSection(path, section)
+	if err != nil {
+		return err
+	}
+	if err := me.LoadYamlBuffer(b); err != nil {
+		return err
+	}
+	if err := me.FixupConfig(); err != nil {
+		return err
+	}
+	return nil
+}
 
 func (c *ApplicationConfig) LoadYamlBuffer(buf []byte) error {
 	err := yaml.Unmarshal(buf, c)
@@ -128,4 +142,43 @@ func PrintConfig(conf *ApplicationConfig) {
 	}
 	fmt.Println("-- Configuration --")
 	fmt.Println(string(d))
+}
+
+// loads configuration from a specific config file in a section by name
+// and then returns the yaml stream as []byte to be loaded natively
+// allow reading from a section
+
+type partial struct {
+	ConfigFile map[string]interface{}
+}
+
+func GetConfigSection(configfile, section string) ([]byte, error) {
+	buf, err := ioutil.ReadFile(configfile)
+	if err != nil {
+		return nil, err
+	}
+
+	cfg := &partial{
+		ConfigFile: make(map[string]interface{}),
+	}
+
+	err = yaml.Unmarshal(buf, cfg.ConfigFile)
+	if err != nil {
+		return nil, err
+	}
+
+	conf, ok := cfg.ConfigFile[section]
+	if ok == false {
+		return nil, fmt.Errorf("No such section %s", section)
+	}
+
+	if conf == nil {
+		return nil, fmt.Errorf("empty section %s", section)
+	}
+
+	blob, err := yaml.Marshal(conf)
+	if err != nil {
+		return nil, err
+	}
+	return blob, nil
 }

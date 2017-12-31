@@ -1,11 +1,10 @@
 package voy
 
 import (
-	"bytes"
 	"fmt"
-	"os"
 	"strings"
 
+	"github.com/sigmonsays/voyager/config"
 	"gopkg.in/yaml.v2"
 )
 
@@ -32,16 +31,13 @@ func (c *VoyFile) LoadDefault() {
 }
 
 func (c *VoyFile) LoadYaml(path string) error {
-	f, err := os.Open(path)
+	section := "default"
+
+	b, err := config.GetConfigSection(path, section)
 	if err != nil {
 		return err
 	}
-	b := bytes.NewBuffer(nil)
-	_, err = b.ReadFrom(f)
-	if err != nil {
-		return err
-	}
-	if err := c.LoadYamlBuffer(b.Bytes()); err != nil {
+	if err := c.LoadYamlBuffer(b); err != nil {
 		return err
 	}
 	if err := c.FixupConfig(); err != nil {

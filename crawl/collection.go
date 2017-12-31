@@ -24,7 +24,7 @@ const (
 func NewCollection(path string) (*Collection, error) {
 	c := &Collection{
 		Path:      path,
-		DbPath:    filepath.Join(path, ".voyager"),
+		DbPath:    filepath.Join(path, ".voyager/db"),
 		IndexFile: filepath.Join(path, ".voyager/index"),
 	}
 
