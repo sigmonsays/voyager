@@ -2,6 +2,7 @@ package voy
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/sigmonsays/voyager/config"
@@ -9,6 +10,8 @@ import (
 )
 
 type VoyFile struct {
+	section string
+
 	Allow   []string
 	Alias   map[string]string
 	Layouts map[string]string
@@ -31,9 +34,8 @@ func (c *VoyFile) LoadDefault() {
 }
 
 func (c *VoyFile) LoadYaml(path string) error {
-	section := "default"
 
-	b, err := config.GetConfigSection(path, section)
+	b, err := config.GetConfigSection(path, c.section)
 	if err != nil {
 		return err
 	}
@@ -60,7 +62,21 @@ func (c *VoyFile) PrintYaml() {
 
 func DefaultConfig() *VoyFile {
 
+	hostname, err := os.Hostname()
+	if err == nil {
+		log.Warnf("Hostname: %s", err)
+	}
+	var section string
+	if hostname == "" {
+		section = "noname"
+	}
+	tmp := strings.Split(hostname, ".")
+	if len(tmp) > 0 {
+		section = tmp[0]
+	}
+
 	return &VoyFile{
+		section: section,
 		Allow:   make([]string, 0),
 		Alias:   make(map[string]string, 0),
 		Layouts: make(map[string]string, 0),
