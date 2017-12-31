@@ -8,12 +8,13 @@ A remote API is currently in development to allow connecting to remote servers.
 
 # index
 
-| section                         | description     |
-| ---                             | ---             |
-| [features](#features)           | feature summary |
-| [install](#install)             | installation    |
-| [configuration](#configuration) | configuration   |
-| [image handling](#image-handling) | image handling   |
+| section                           | description     |
+| ---                               | ---             |
+| [features](#features)             | feature summary |
+| [install](#install)               | installation    |
+| [configuration](#configuration)   | configuration   |
+| [image handling](#image-handling) | image handling  |
+| [audio handling](#audio-handling) | audio handling  |
 
 # features
 - context aware layout (photos, video, audio, etc)
@@ -66,5 +67,12 @@ The image handler will render thumbnails for each image found. It make take a li
 during page load.
 
 The resized images are cached in `cachedir` which by default is `/tmp/voyager`
+
+
+# audio handling
+
+When voyager finds a directory with files which are mostly audio files, the audio handler will be invoked.
+
+The audio handler displays a simple player which you can click on the track to play and listen to it.
 
 
