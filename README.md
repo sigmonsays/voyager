@@ -24,6 +24,12 @@ A remote API is currently in development to allow connecting to remote servers.
 - remote API so multiple voyagers can talk to each other
 - network ACL access control
 
+# getting started
+
+Follow the [installation](#install) and [configuration](#configuration) to get setup
+
+Load up http://127.0.0.1:8181/dashboard/ for the dashboard view 
+
 # install
     
     export GOPATH=$HOME/go
