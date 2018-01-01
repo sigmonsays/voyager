@@ -24,6 +24,8 @@ LocalPath      {{.LocalPath}}
 RemoteServer   {{.RemoteServer}}
 
 prefix         {{$prefix}}
+
+
 -->
 
 
@@ -39,7 +41,7 @@ prefix         {{$prefix}}
 <div class=container>
    {{range $i, $f := .Files}}
    <div class=thumbnail>
-      <a href="{{$prefix}}/{{$f.Name}}"><img src="{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
+      <a href="{{ $f.Name}}"><img src="{{$.RemoteServer}}/image/?path={{$.LocalPath}}/{{$f.Name}}"></img></a>
    </div>
    {{end}}
 </div>

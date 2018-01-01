@@ -9,25 +9,25 @@
 // picture.html
 // style.css
 // video.html
-// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html
-// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html
-// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html
-// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html
-// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html
+// jPlayer/add-on/jplayer.playlist.js
+// jPlayer/add-on/jplayer.playlist.min.js
+// jPlayer/add-on/jquery.jplayer.inspector.js
+// jPlayer/add-on/jquery.jplayer.inspector.min.js
+// jPlayer/jplayer/jquery.jplayer.js
+// jPlayer/jplayer/jquery.jplayer.min.js
+// jPlayer/jplayer/jquery.jplayer.swf
+// jPlayer/popcorn/popcorn.jplayer.js
+// jPlayer/popcorn/popcorn.jplayer.min.js
+// jPlayer/skin/blue.monday/css/jplayer.blue.monday.css
+// jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css
 // jPlayer/skin/blue.monday/image/jplayer.blue.monday.jpg
 // jPlayer/skin/blue.monday/image/jplayer.blue.monday.seeking.gif
 // jPlayer/skin/blue.monday/image/jplayer.blue.monday.video.play.png
-// jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css
-// jPlayer/skin/blue.monday/css/jplayer.blue.monday.css
-// jPlayer/jplayer/jquery.jplayer.min.js
-// jPlayer/jplayer/jquery.jplayer.swf
-// jPlayer/jplayer/jquery.jplayer.js
-// jPlayer/popcorn/popcorn.jplayer.js
-// jPlayer/popcorn/popcorn.jplayer.min.js
-// jPlayer/add-on/jquery.jplayer.inspector.js
-// jPlayer/add-on/jquery.jplayer.inspector.min.js
-// jPlayer/add-on/jplayer.playlist.js
-// jPlayer/add-on/jplayer.playlist.min.js
+// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html
+// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html
+// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html
+// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html
+// jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html
 // DO NOT EDIT!
 
 package asset
@@ -216,10 +216,10 @@ func videoHtml() (*asset, error) {
 	return a, err
 }
 
-// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html"
-	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html"
+// jplayerAddOnJplayerPlaylistJs reads file data from disk. It returns an error on failure.
+func jplayerAddOnJplayerPlaylistJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jplayer.playlist.js"
+	name := "jPlayer/add-on/jplayer.playlist.js"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -234,10 +234,10 @@ func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml() (*asset, 
 	return a, err
 }
 
-// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html"
-	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html"
+// jplayerAddOnJplayerPlaylistMinJs reads file data from disk. It returns an error on failure.
+func jplayerAddOnJplayerPlaylistMinJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jplayer.playlist.min.js"
+	name := "jPlayer/add-on/jplayer.playlist.min.js"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -252,10 +252,10 @@ func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml() (*asset, er
 	return a, err
 }
 
-// jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html"
-	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html"
+// jplayerAddOnJqueryJplayerInspectorJs reads file data from disk. It returns an error on failure.
+func jplayerAddOnJqueryJplayerInspectorJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jquery.jplayer.inspector.js"
+	name := "jPlayer/add-on/jquery.jplayer.inspector.js"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -270,10 +270,10 @@ func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml() (*asset, 
 	return a, err
 }
 
-// jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html"
-	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html"
+// jplayerAddOnJqueryJplayerInspectorMinJs reads file data from disk. It returns an error on failure.
+func jplayerAddOnJqueryJplayerInspectorMinJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jquery.jplayer.inspector.min.js"
+	name := "jPlayer/add-on/jquery.jplayer.inspector.min.js"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -288,10 +288,118 @@ func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml() (*asset, er
 	return a, err
 }
 
-// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html"
-	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html"
+// jplayerJplayerJqueryJplayerJs reads file data from disk. It returns an error on failure.
+func jplayerJplayerJqueryJplayerJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.js"
+	name := "jPlayer/jplayer/jquery.jplayer.js"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerJplayerJqueryJplayerMinJs reads file data from disk. It returns an error on failure.
+func jplayerJplayerJqueryJplayerMinJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.min.js"
+	name := "jPlayer/jplayer/jquery.jplayer.min.js"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerJplayerJqueryJplayerSwf reads file data from disk. It returns an error on failure.
+func jplayerJplayerJqueryJplayerSwf() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.swf"
+	name := "jPlayer/jplayer/jquery.jplayer.swf"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerPopcornPopcornJplayerJs reads file data from disk. It returns an error on failure.
+func jplayerPopcornPopcornJplayerJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/popcorn/popcorn.jplayer.js"
+	name := "jPlayer/popcorn/popcorn.jplayer.js"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerPopcornPopcornJplayerMinJs reads file data from disk. It returns an error on failure.
+func jplayerPopcornPopcornJplayerMinJs() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/popcorn/popcorn.jplayer.min.js"
+	name := "jPlayer/popcorn/popcorn.jplayer.min.js"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerSkinBlueMondayCssJplayerBlueMondayCss reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayCssJplayerBlueMondayCss() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/css/jplayer.blue.monday.css"
+	name := "jPlayer/skin/blue.monday/css/jplayer.blue.monday.css"
+	bytes, err := bindataRead(path, name)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.Stat(path)
+	if err != nil {
+		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
+	}
+
+	a := &asset{bytes: bytes, info: fi}
+	return a, err
+}
+
+// jplayerSkinBlueMondayCssJplayerBlueMondayMinCss reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayCssJplayerBlueMondayMinCss() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css"
+	name := "jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -360,10 +468,10 @@ func jplayerSkinBlueMondayImageJplayerBlueMondayVideoPlayPng() (*asset, error) {
 	return a, err
 }
 
-// jplayerSkinBlueMondayCssJplayerBlueMondayMinCss reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayCssJplayerBlueMondayMinCss() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css"
-	name := "jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css"
+// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html"
+	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -378,10 +486,10 @@ func jplayerSkinBlueMondayCssJplayerBlueMondayMinCss() (*asset, error) {
 	return a, err
 }
 
-// jplayerSkinBlueMondayCssJplayerBlueMondayCss reads file data from disk. It returns an error on failure.
-func jplayerSkinBlueMondayCssJplayerBlueMondayCss() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/css/jplayer.blue.monday.css"
-	name := "jPlayer/skin/blue.monday/css/jplayer.blue.monday.css"
+// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html"
+	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -396,10 +504,10 @@ func jplayerSkinBlueMondayCssJplayerBlueMondayCss() (*asset, error) {
 	return a, err
 }
 
-// jplayerJplayerJqueryJplayerMinJs reads file data from disk. It returns an error on failure.
-func jplayerJplayerJqueryJplayerMinJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.min.js"
-	name := "jPlayer/jplayer/jquery.jplayer.min.js"
+// jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html"
+	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -414,10 +522,10 @@ func jplayerJplayerJqueryJplayerMinJs() (*asset, error) {
 	return a, err
 }
 
-// jplayerJplayerJqueryJplayerSwf reads file data from disk. It returns an error on failure.
-func jplayerJplayerJqueryJplayerSwf() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.swf"
-	name := "jPlayer/jplayer/jquery.jplayer.swf"
+// jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html"
+	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -432,118 +540,10 @@ func jplayerJplayerJqueryJplayerSwf() (*asset, error) {
 	return a, err
 }
 
-// jplayerJplayerJqueryJplayerJs reads file data from disk. It returns an error on failure.
-func jplayerJplayerJqueryJplayerJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/jplayer/jquery.jplayer.js"
-	name := "jPlayer/jplayer/jquery.jplayer.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerPopcornPopcornJplayerJs reads file data from disk. It returns an error on failure.
-func jplayerPopcornPopcornJplayerJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/popcorn/popcorn.jplayer.js"
-	name := "jPlayer/popcorn/popcorn.jplayer.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerPopcornPopcornJplayerMinJs reads file data from disk. It returns an error on failure.
-func jplayerPopcornPopcornJplayerMinJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/popcorn/popcorn.jplayer.min.js"
-	name := "jPlayer/popcorn/popcorn.jplayer.min.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerAddOnJqueryJplayerInspectorJs reads file data from disk. It returns an error on failure.
-func jplayerAddOnJqueryJplayerInspectorJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jquery.jplayer.inspector.js"
-	name := "jPlayer/add-on/jquery.jplayer.inspector.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerAddOnJqueryJplayerInspectorMinJs reads file data from disk. It returns an error on failure.
-func jplayerAddOnJqueryJplayerInspectorMinJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jquery.jplayer.inspector.min.js"
-	name := "jPlayer/add-on/jquery.jplayer.inspector.min.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerAddOnJplayerPlaylistJs reads file data from disk. It returns an error on failure.
-func jplayerAddOnJplayerPlaylistJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jplayer.playlist.js"
-	name := "jPlayer/add-on/jplayer.playlist.js"
-	bytes, err := bindataRead(path, name)
-	if err != nil {
-		return nil, err
-	}
-
-	fi, err := os.Stat(path)
-	if err != nil {
-		err = fmt.Errorf("Error reading asset info %s at %s: %v", name, path, err)
-	}
-
-	a := &asset{bytes: bytes, info: fi}
-	return a, err
-}
-
-// jplayerAddOnJplayerPlaylistMinJs reads file data from disk. It returns an error on failure.
-func jplayerAddOnJplayerPlaylistMinJs() (*asset, error) {
-	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/add-on/jplayer.playlist.min.js"
-	name := "jPlayer/add-on/jplayer.playlist.min.js"
+// jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml reads file data from disk. It returns an error on failure.
+func jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml() (*asset, error) {
+	path := "/home/sig/go/voyager/src/github.com/sigmonsays/voyager/asset/jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html"
+	name := "jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html"
 	bytes, err := bindataRead(path, name)
 	if err != nil {
 		return nil, err
@@ -619,25 +619,25 @@ var _bindata = map[string]func() (*asset, error){
 	"picture.html": pictureHtml,
 	"style.css": styleCss,
 	"video.html": videoHtml,
-	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml,
-	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml,
-	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml,
-	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml,
-	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml,
+	"jPlayer/add-on/jplayer.playlist.js": jplayerAddOnJplayerPlaylistJs,
+	"jPlayer/add-on/jplayer.playlist.min.js": jplayerAddOnJplayerPlaylistMinJs,
+	"jPlayer/add-on/jquery.jplayer.inspector.js": jplayerAddOnJqueryJplayerInspectorJs,
+	"jPlayer/add-on/jquery.jplayer.inspector.min.js": jplayerAddOnJqueryJplayerInspectorMinJs,
+	"jPlayer/jplayer/jquery.jplayer.js": jplayerJplayerJqueryJplayerJs,
+	"jPlayer/jplayer/jquery.jplayer.min.js": jplayerJplayerJqueryJplayerMinJs,
+	"jPlayer/jplayer/jquery.jplayer.swf": jplayerJplayerJqueryJplayerSwf,
+	"jPlayer/popcorn/popcorn.jplayer.js": jplayerPopcornPopcornJplayerJs,
+	"jPlayer/popcorn/popcorn.jplayer.min.js": jplayerPopcornPopcornJplayerMinJs,
+	"jPlayer/skin/blue.monday/css/jplayer.blue.monday.css": jplayerSkinBlueMondayCssJplayerBlueMondayCss,
+	"jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css": jplayerSkinBlueMondayCssJplayerBlueMondayMinCss,
 	"jPlayer/skin/blue.monday/image/jplayer.blue.monday.jpg": jplayerSkinBlueMondayImageJplayerBlueMondayJpg,
 	"jPlayer/skin/blue.monday/image/jplayer.blue.monday.seeking.gif": jplayerSkinBlueMondayImageJplayerBlueMondaySeekingGif,
 	"jPlayer/skin/blue.monday/image/jplayer.blue.monday.video.play.png": jplayerSkinBlueMondayImageJplayerBlueMondayVideoPlayPng,
-	"jPlayer/skin/blue.monday/css/jplayer.blue.monday.min.css": jplayerSkinBlueMondayCssJplayerBlueMondayMinCss,
-	"jPlayer/skin/blue.monday/css/jplayer.blue.monday.css": jplayerSkinBlueMondayCssJplayerBlueMondayCss,
-	"jPlayer/jplayer/jquery.jplayer.min.js": jplayerJplayerJqueryJplayerMinJs,
-	"jPlayer/jplayer/jquery.jplayer.swf": jplayerJplayerJqueryJplayerSwf,
-	"jPlayer/jplayer/jquery.jplayer.js": jplayerJplayerJqueryJplayerJs,
-	"jPlayer/popcorn/popcorn.jplayer.js": jplayerPopcornPopcornJplayerJs,
-	"jPlayer/popcorn/popcorn.jplayer.min.js": jplayerPopcornPopcornJplayerMinJs,
-	"jPlayer/add-on/jquery.jplayer.inspector.js": jplayerAddOnJqueryJplayerInspectorJs,
-	"jPlayer/add-on/jquery.jplayer.inspector.min.js": jplayerAddOnJqueryJplayerInspectorMinJs,
-	"jPlayer/add-on/jplayer.playlist.js": jplayerAddOnJplayerPlaylistJs,
-	"jPlayer/add-on/jplayer.playlist.min.js": jplayerAddOnJplayerPlaylistMinJs,
+	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.playlist.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioPlaylistHtml,
+	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.single.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioSingleHtml,
+	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.audio.stream.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayAudioStreamHtml,
+	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.playlist.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoPlaylistHtml,
+	"jPlayer/skin/blue.monday/mustache/jplayer.blue.monday.video.single.html": jplayerSkinBlueMondayMustacheJplayerBlueMondayVideoSingleHtml,
 }
 
 // AssetDir returns the file names below a certain

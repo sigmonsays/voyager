@@ -3,10 +3,10 @@ FLAGS = -pkg=asset -ignore=bindata.go -ignore=Makefile
 
 
 all: deps
-	go-bindata $(FLAGS) *
+	go-bindata $(FLAGS) * jPlayer/...
 
 dev: deps
-	go-bindata $(FLAGS) -debug * $(shell find jPlayer/ -type f)
+	go-bindata $(FLAGS) -debug * jPlayer/...
 
 deps:
 	go get github.com/jteeuwen/go-bindata/...
