@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -25,6 +26,32 @@ func NewListHandler(handler *Handler) *ListHandler {
 func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("path:%s localpath:%s", h.Path, h.LocalPath)
 
+	q := r.URL.Query()
+	format := q.Get("format")
+
+	if format == "json" {
+		h.jsonList(w, r)
+		return
+	}
+
+	h.templateList(w, r)
+}
+
+func (h *ListHandler) jsonList(w http.ResponseWriter, r *http.Request) {
+
+	log.Debugf("jsonList path:%s localpath:%s", h.Path, h.LocalPath)
+	w.Header().Set("Content-Type", "application/json")
+
+	data := h.buildGallery()
+
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		WriteError(w, r, "encode: %s", err)
+		return
+	}
+}
+
+func (h *ListHandler) templateList(w http.ResponseWriter, r *http.Request) {
 	tmplData, err := asset.Asset("list.html")
 	if err != nil {
 		WriteError(w, r, "template: %s", err)
@@ -42,6 +69,19 @@ func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	tmpl := template.Must(template.New("list.html").Parse(string(tmplData)))
 
+	log.Tracef("handler %s", h.Handler.Path)
+
+	data := h.buildGallery()
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		WriteError(w, r, "template render: %s", err)
+		return
+	}
+
+}
+
+func (h *ListHandler) buildGallery() *Gallery {
 	data := &Gallery{
 		Title:        "Lists",
 		Files:        make([]*types.File, 0),
@@ -52,8 +92,6 @@ func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		RemoteServer: h.RemoteServer,
 		Breadcrumb:   NewBreadcrumb(),
 	}
-
-	log.Tracef("handler %s", h.Handler.Path)
 
 	tmp := strings.Split(h.Path, "/")
 	for i := 0; i < len(tmp); i++ {
@@ -67,11 +105,5 @@ func (h *ListHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			data.Files = append(data.Files, file)
 		}
 	}
-
-	err = tmpl.Execute(w, data)
-	if err != nil {
-		WriteError(w, r, "template render: %s", err)
-		return
-	}
-
+	return data
 }
