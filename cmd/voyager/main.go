@@ -39,6 +39,7 @@ func main() {
 	cfg := config.GetDefaultConfig()
 	flag.StringVar(&cfg.Http.BindAddr, "bind", cfg.Http.BindAddr, "bind address")
 	flag.StringVar(&cfg.LogLevel, "log", cfg.LogLevel, "log level")
+	flag.StringVar(&cfg.LogLevel, "l", cfg.LogLevel, "alias for -log")
 	flag.Parse()
 
 	var err error
