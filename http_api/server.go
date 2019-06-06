@@ -18,6 +18,7 @@ import (
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/filetype"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/health"
 	"github.com/sigmonsays/voyager/layout"
 	"github.com/sigmonsays/voyager/proto/vapi"
 	"github.com/sigmonsays/voyager/types"
@@ -28,14 +29,15 @@ type Server struct {
 	Addr string
 	Conf *config.ApplicationConfig
 
-	Ctx        context.Context
-	Cache      *cache.FileCache
-	Factory    *handler.HandlerFactory
-	PathLoader handler.PathLoader
-	Layout     layout.LayoutResolver
-	VoyFile    voy.VoyLoader
-	Dashboard  *handler.DashboardHandler
-	Template   *template.Template
+	Ctx         context.Context
+	Cache       *cache.FileCache
+	Factory     *handler.HandlerFactory
+	PathLoader  handler.PathLoader
+	Layout      layout.LayoutResolver
+	VoyFile     voy.VoyLoader
+	Dashboard   *handler.DashboardHandler
+	Template    *template.Template
+	HealthCheck *health.Health
 
 	srv *http.Server
 	mux *http.ServeMux

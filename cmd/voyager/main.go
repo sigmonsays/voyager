@@ -12,6 +12,7 @@ import (
 	"github.com/sigmonsays/voyager/cache"
 	"github.com/sigmonsays/voyager/config"
 	"github.com/sigmonsays/voyager/handler"
+	"github.com/sigmonsays/voyager/health"
 	"github.com/sigmonsays/voyager/http_api"
 	"github.com/sigmonsays/voyager/layout"
 	"github.com/sigmonsays/voyager/proto/vapi"
@@ -104,6 +105,9 @@ func main() {
 		return
 	}
 
+	// health check
+	healthCheck := health.NewHealthCheck()
+
 	// core components
 	handlerFactory := handler.NewHandlerFactory()
 	pathLoader := handler.NewFilesystemPathLoader()
@@ -132,6 +136,7 @@ func main() {
 	srv := http_api.NewServer(cfg.Http.BindAddr, opts)
 	srv.Conf = cfg
 	srv.Cache = cache
+	srv.HealthCheck = healthCheck
 	srv.Factory = handlerFactory
 	srv.PathLoader = pathLoader
 	srv.Layout = layoutResolver
