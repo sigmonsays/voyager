@@ -23,6 +23,7 @@ A remote API is currently in development to allow connecting to remote servers.
 - HTML5 audio playback using jplayer
 - remote API so multiple voyagers can talk to each other
 - network ACL access control
+- simple dashboard gives overview of current configuration
 
 # getting started
 
