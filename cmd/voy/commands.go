@@ -1,23 +1,23 @@
 package main
 
-import "github.com/codegangsta/cli"
+import "github.com/urfave/cli"
 
-func GetCommands(app *Application) []cli.Command {
-	ping := cli.Command{
+func GetCommands(app *Application) []*cli.Command {
+	ping := &cli.Command{
 		Name:        "ping",
 		Usage:       "ping rpc",
 		Description: PingDescription,
 		Flags:       PingFlags,
 		Action:      app.Ping,
 	}
-	list := cli.Command{
+	list := &cli.Command{
 		Name:        "list",
 		Usage:       "list rpc",
 		Description: ListDescription,
 		Flags:       ListFlags,
 		Action:      app.List,
 	}
-	ret := []cli.Command{
+	ret := []*cli.Command{
 		ping,
 		list,
 	}

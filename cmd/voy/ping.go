@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"golang.org/x/net/context"
 	// "google.golang.org/grpc"
@@ -13,12 +13,12 @@ import (
 )
 
 var PingFlags = []cli.Flag{
-	cli.StringFlag{
+	&cli.StringFlag{
 		Name:  "message, m",
 		Value: "ping",
 		Usage: "the ping message",
 	},
-	cli.StringFlag{
+	&cli.StringFlag{
 		Name:  "host, H",
 		Usage: "the host to ping",
 	},
@@ -28,7 +28,7 @@ var PingDescription = `
 ping the rpc service
 `
 
-func (ac *Application) Ping(c *cli.Context) {
+func (ac *Application) Ping(c *cli.Context) error {
 	message := c.String("message")
 	host := vapi.HostDefaultPort(c.String("host"), vapi.DefaultPortString)
 
@@ -58,4 +58,5 @@ func (ac *Application) Ping(c *cli.Context) {
 
 	fmt.Printf("%#v\n", res)
 
+	return nil
 }

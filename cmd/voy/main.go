@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 	"golang.org/x/net/context"
 
 	"github.com/sigmonsays/voyager/config"
@@ -35,7 +35,7 @@ func main() {
 	cfg := config.GetDefaultConfig()
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  "level, l",
 			Value: "WARN",
 			Usage: "change log level",

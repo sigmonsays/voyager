@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/codegangsta/cli"
+	"github.com/urfave/cli"
 
 	"golang.org/x/net/context"
 	// "google.golang.org/grpc"
@@ -13,7 +13,7 @@ import (
 )
 
 var ListFlags = []cli.Flag{
-	cli.StringFlag{
+	&cli.StringFlag{
 		Name:  "host, H",
 		Usage: "the host to list",
 	},
@@ -23,7 +23,7 @@ var ListDescription = `
 list contents
 `
 
-func (ac *Application) List(c *cli.Context) {
+func (ac *Application) List(c *cli.Context) error {
 	message := c.String("host")
 	host := vapi.HostDefaultPort(c.String("host"), vapi.DefaultPortString)
 
@@ -49,5 +49,6 @@ func (ac *Application) List(c *cli.Context) {
 	}
 
 	fmt.Printf("%#v\n", res)
+	return nil
 
 }
